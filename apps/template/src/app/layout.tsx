@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import "@mgorrin/web-kit/design-system/tokens.css";
 import "./globals.css";
+import { themeCssVariables } from "../../theme.config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Override por cliente de las variables --color-* de tokens.css — ver theme.config.ts */}
+        <style dangerouslySetInnerHTML={{ __html: themeCssVariables() }} />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
     </html>
   );

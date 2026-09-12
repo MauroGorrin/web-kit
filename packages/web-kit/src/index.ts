@@ -3,5 +3,4 @@
 // `docs/surface.md`. No se agrega `export *` de ningún módulo — cada símbolo se re-exporta
 // explícitamente cuando su módulo esté listo.
 //
-// Vacía en E1-T1 (bootstrap). Cada módulo posterior añade sus propios exports aquí.
-export {};
+export * from "./design-system/index.ts";

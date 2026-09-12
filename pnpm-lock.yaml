@@ -294,6 +294,12 @@ importers:
       '@stripe/stripe-js':
         specifier: ^9.16.0
         version: 9.16.0
+      '@types/react':
+        specifier: ^19
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19
+        version: 19.3.0(@types/react@19.3.0)
 
 packages:
 
