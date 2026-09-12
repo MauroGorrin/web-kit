@@ -399,7 +399,7 @@
       "apps/template/src/components/nav/AdminNav.tsx",
       "apps/template/modules.config.test.ts"
     ],
-    "status": "in_progress"
+    "status": "done"
   },
   {
     "id": "E3-T2",
@@ -430,7 +430,7 @@
       ".github/workflows/ci.yml",
       "apps/template/e2e/ci-smoke.spec.ts"
     ],
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "id": "E3-T3",
