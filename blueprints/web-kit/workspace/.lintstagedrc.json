@@ -1,0 +1,4 @@
+{
+  "!(blueprints/**/*).{ts,tsx,js,jsx,mjs,cjs}": ["eslint --fix", "prettier --write"],
+  "!(blueprints/**/*).{json,md,yml,yaml,css}": ["prettier --write"]
+}

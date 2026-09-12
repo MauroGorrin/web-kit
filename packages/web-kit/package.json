@@ -1,0 +1,93 @@
+{
+  "name": "@mgorrin/web-kit",
+  "version": "0.1.0",
+  "description": "Librería interna compartida de módulos (design system, auth, scheduling, CRM, pagos, etc.) para los sitios de clientes de la agencia.",
+  "license": "UNLICENSED",
+  "private": false,
+  "type": "module",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mgorrin/web-kit.git",
+    "directory": "packages/web-kit"
+  },
+  "files": [
+    "dist",
+    "firestore.rules",
+    "firestore.indexes.json"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./design-system": {
+      "types": "./dist/design-system/index.d.ts",
+      "import": "./dist/design-system/index.js"
+    },
+    "./auth-rbac": {
+      "types": "./dist/auth-rbac/index.d.ts",
+      "import": "./dist/auth-rbac/index.js"
+    },
+    "./multi-location": {
+      "types": "./dist/multi-location/index.d.ts",
+      "import": "./dist/multi-location/index.js"
+    },
+    "./scheduling": {
+      "types": "./dist/scheduling/index.d.ts",
+      "import": "./dist/scheduling/index.js"
+    },
+    "./client-portal": {
+      "types": "./dist/client-portal/index.d.ts",
+      "import": "./dist/client-portal/index.js"
+    },
+    "./admin-panel": {
+      "types": "./dist/admin-panel/index.d.ts",
+      "import": "./dist/admin-panel/index.js"
+    },
+    "./crm": {
+      "types": "./dist/crm/index.d.ts",
+      "import": "./dist/crm/index.js"
+    },
+    "./notifications": {
+      "types": "./dist/notifications/index.d.ts",
+      "import": "./dist/notifications/index.js"
+    },
+    "./seo-analytics": {
+      "types": "./dist/seo-analytics/index.d.ts",
+      "import": "./dist/seo-analytics/index.js"
+    },
+    "./payments": {
+      "types": "./dist/payments/index.d.ts",
+      "import": "./dist/payments/index.js"
+    },
+    "./ecommerce": {
+      "types": "./dist/ecommerce/index.d.ts",
+      "import": "./dist/ecommerce/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --root ."
+  },
+  "peerDependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "firebase": "^12.19.0"
+  },
+  "dependencies": {
+    "radix-ui": "^1.6.7",
+    "lucide-react": "^1.45.0",
+    "class-variance-authority": "^0.7.1",
+    "firebase-admin": "^14.4.0",
+    "resend": "^6.28.0",
+    "stripe": "^22.6.2"
+  },
+  "devDependencies": {
+    "@stripe/stripe-js": "^9.16.0"
+  }
+}

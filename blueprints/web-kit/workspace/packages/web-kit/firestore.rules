@@ -1,0 +1,67 @@
+rules_version = '2';
+
+// Reglas base de @mgorrin/web-kit. El paso 3 (auth-rbac) las completa con las
+// colecciones de auth/roles; los pasos 4-12 añaden una sección por módulo.
+// Cada proyecto de cliente despliega ESTE archivo (vía firebase.json) contra
+// SU PROPIO proyecto de Firebase — no hay base de datos compartida entre clientes.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function role() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function hasRole(r) {
+      return isSignedIn() && role() == r;
+    }
+
+    function isAdminOrAbove() {
+      return isSignedIn() && role() in ['admin', 'super_admin'];
+    }
+
+    // --- users (auth-rbac, paso 3) ---
+    match /users/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdminOrAbove());
+      allow write: if hasRole('super_admin');
+    }
+
+    // --- sedes (multi-location, paso 4) ---
+    match /sedes/{sedeId} {
+      allow read: if true;
+      allow write: if isAdminOrAbove();
+    }
+
+    // --- citas (scheduling, paso 5) ---
+    match /citas/{citaId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isAdminOrAbove() || (isSignedIn() && resource.data.clientUid == request.auth.uid);
+    }
+
+    // --- leads (crm, paso 8) ---
+    match /leads/{leadId} {
+      allow read, write: if isAdminOrAbove();
+    }
+
+    // --- productos / pedidos (ecommerce, paso 12) ---
+    match /productos/{productoId} {
+      allow read: if true;
+      allow write: if isAdminOrAbove();
+    }
+
+    match /pedidos/{pedidoId} {
+      allow read: if isAdminOrAbove() || (isSignedIn() && resource.data.clientUid == request.auth.uid);
+      allow create: if isSignedIn();
+      allow update, delete: if isAdminOrAbove();
+    }
+
+    // Denegación por defecto para cualquier otra colección.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,470 @@
+[
+  {
+    "id": "E1-T1",
+    "title": "Bootstrap del monorepo y scaffold de la plantilla",
+    "epic": "01-foundation",
+    "dependencies": [],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN `pnpm install --frozen-lockfile` corre en la raíz THE SYSTEM SHALL salir con código 0.",
+      "WHEN `pnpm --filter template build` corre THE SYSTEM SHALL producir un build de producción sin errores.",
+      "WHEN `pnpm --filter template start` arranca y se hace `curl` a `/` THE SYSTEM SHALL responder `200`.",
+      "WHEN `pnpm --filter @mgorrin/web-kit build` corre contra `src/index.ts` vacío THE SYSTEM SHALL salir con código 0.",
+      "WHEN se lee `docs/surface.md` THE SYSTEM SHALL tener las dos secciones (valor / tipo) presentes, aunque vacías."
+    ],
+    "verify": [
+      "pnpm install --frozen-lockfile",
+      "pnpm --filter @mgorrin/web-kit build",
+      "pnpm --filter template build",
+      "pnpm --filter template start &",
+      "sleep 2",
+      "test \"$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/)\" = \"200\"",
+      "kill %1",
+      "test -f docs/surface.md"
+    ],
+    "checkpoint": "step-01-monorepo-bootstrap",
+    "files": [
+      "packages/web-kit/src/index.ts",
+      "docs/surface.md",
+      "apps/template/package.json",
+      "apps/template/src/app/**"
+    ],
+    "status": "in_progress"
+  },
+  {
+    "id": "E1-T2",
+    "title": "Módulo design-system y congelamiento de la superficie pública",
+    "epic": "01-foundation",
+    "dependencies": ["E1-T1"],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN `pnpm --filter @mgorrin/web-kit build` corre THE SYSTEM SHALL exportar `Button`, `Card`, `Input`, `Dialog` desde `dist/design-system/index.js`.",
+      "WHEN el script de chequeo de drift corre THE SYSTEM SHALL comparar las filas de valor de `docs/surface.md` contra el namespace runtime y las filas de tipo contra la salida de `tsc --declaration`, saliendo con código 0.",
+      "WHEN la home de `apps/template` renderiza un `<Button>` THE SYSTEM SHALL aplicar `--color-primary` de `theme.config.ts` sin hardcodear el hex en el componente.",
+      "WHEN `pnpm exec playwright test apps/template/e2e/home.spec.ts` corre THE SYSTEM SHALL pasar.",
+      "WHEN se importa `@radix-ui/react-dialog` directamente fuera de `design-system/` THE SYSTEM SHALL fallar el lint."
+    ],
+    "verify": [
+      "pnpm --filter @mgorrin/web-kit build",
+      "node -e \"const m = require('./packages/web-kit/dist/design-system/index.js'); ['Button','Card','Input','Dialog'].forEach(n => { if (!(n in m)) { console.error('missing '+n); process.exit(1); } })\"",
+      "pnpm exec vitest run packages/web-kit/src/design-system",
+      "pnpm --filter template build",
+      "pnpm exec playwright test apps/template/e2e/home.spec.ts",
+      "pnpm lint"
+    ],
+    "checkpoint": "step-02-design-system",
+    "files": [
+      "packages/web-kit/src/design-system/**",
+      "apps/template/theme.config.ts",
+      "packages/web-kit/src/index.ts",
+      "apps/template/e2e/home.spec.ts",
+      "docs/surface.md"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E1-T3",
+    "title": "Módulo auth-rbac y reglas de seguridad de users",
+    "epic": "01-foundation",
+    "dependencies": ["E1-T2"],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN un usuario sin sesión intenta leer `users/{otroUid}` en el emulador THE SYSTEM SHALL denegar el acceso.",
+      "WHEN un usuario con rol `admin` lee cualquier documento de `users` THE SYSTEM SHALL permitirlo.",
+      "WHEN un usuario intenta escribir su propio documento `users/{uid}` sin ser `super_admin` THE SYSTEM SHALL denegar la escritura.",
+      "WHEN `getSession()` se llama sin cookie de sesión válida THE SYSTEM SHALL retornar `null`, nunca lanzar una excepción no capturada.",
+      "WHEN `FIREBASE_ADMIN_PRIVATE_KEY` está ausente al importar `firebase-admin.ts` THE SYSTEM SHALL lanzar un error nombrado en el import.",
+      "WHEN `pnpm exec vitest run tests/rules/users.test.ts` corre contra el emulador THE SYSTEM SHALL pasar con 0 fallos."
+    ],
+    "verify": [
+      "grep -q '\"firebase\"' apps/template/package.json",
+      "pnpm --filter @mgorrin/web-kit build",
+      "pnpm exec firebase emulators:exec --only firestore,auth \"pnpm exec vitest run tests/rules/users.test.ts\"",
+      "pnpm typecheck"
+    ],
+    "checkpoint": "step-03-auth-rbac",
+    "files": [
+      "apps/template/package.json",
+      "packages/web-kit/src/auth-rbac/**",
+      "tests/rules/users.test.ts",
+      "packages/web-kit/src/index.ts",
+      "docs/surface.md"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E1-T4",
+    "title": "Módulo multi-location",
+    "epic": "01-foundation",
+    "dependencies": ["E1-T3"],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN se crea la primera Sede de un proyecto THE SYSTEM SHALL marcarla `isDefault: true` automáticamente.",
+      "WHEN se intenta borrar una Sede con al menos un `Especialista` activo THE SYSTEM SHALL rechazar el borrado con un error tipado `CONFLICT`.",
+      "WHEN un usuario sin rol admin intenta escribir en `sedes` vía el emulador THE SYSTEM SHALL denegarlo.",
+      "WHEN solo existe una Sede THE SYSTEM SHALL permitir que la UI la oculte del selector sin romper ninguna consulta."
+    ],
+    "verify": [
+      "pnpm exec vitest run packages/web-kit/src/multi-location",
+      "pnpm exec firebase emulators:exec --only firestore,auth \"pnpm exec vitest run tests/rules/sedes.test.ts\"",
+      "pnpm typecheck"
+    ],
+    "checkpoint": "step-04-multi-location",
+    "files": [
+      "packages/web-kit/src/multi-location/**",
+      "tests/rules/sedes.test.ts",
+      "packages/web-kit/src/index.ts",
+      "docs/surface.md"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E1-T5",
+    "title": "Módulo scheduling y rutas de la API de citas",
+    "epic": "01-foundation",
+    "dependencies": ["E1-T4"],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN `POST /api/citas` recibe un body válido con sesión THE SYSTEM SHALL crear un documento en `citas` con `status: \"scheduled\"` y responder `201`.",
+      "WHEN `POST /api/citas` recibe `sedeId` inexistente THE SYSTEM SHALL responder `404` con `{ ok: false, error: { code: \"NOT_FOUND\" } }` y no escribir ningún documento.",
+      "WHEN `POST /api/citas` recibe una request sin sesión THE SYSTEM SHALL responder `401` y no escribir ningún documento.",
+      "WHEN `PATCH /api/citas/[id]` es llamado por un usuario sin rol admin THE SYSTEM SHALL responder `403`.",
+      "WHEN un cliente sin cuenta agenda manualmente vía el admin THE SYSTEM SHALL aceptar `clientUid: null`."
+    ],
+    "verify": [
+      "pnpm exec vitest run packages/web-kit/src/scheduling",
+      "pnpm --filter template build",
+      "pnpm --filter template start &",
+      "sleep 2",
+      "test \"$(curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:3000/api/citas -H 'Content-Type: application/json' -d '{}')\" = \"401\"",
+      "kill %1"
+    ],
+    "checkpoint": "step-05-scheduling",
+    "files": [
+      "packages/web-kit/src/scheduling/**",
+      "apps/template/src/app/api/citas/route.ts",
+      "apps/template/src/app/api/citas/[id]/route.ts",
+      "tests/rules/citas.test.ts",
+      "packages/web-kit/src/index.ts"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E1-T6",
+    "title": "Módulo client-portal",
+    "epic": "01-foundation",
+    "dependencies": ["E1-T3", "E1-T5"],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN un usuario autenticado con una Cita futura visita `/portal` THE SYSTEM SHALL mostrar fecha, hora y estado de esa Cita.",
+      "WHEN un usuario autenticado sin citas futuras visita `/portal` THE SYSTEM SHALL mostrar el estado vacío \"No tienes citas programadas\" con un enlace a `/agenda`.",
+      "WHEN un usuario no autenticado visita `/portal` THE SYSTEM SHALL redirigir a `/`.",
+      "WHEN se inspecciona cualquier componente de `client-portal` THE SYSTEM SHALL no contener ningún campo de dato clínico."
+    ],
+    "verify": [
+      "pnpm exec vitest run packages/web-kit/src/client-portal",
+      "pnpm --filter template build",
+      "pnpm exec playwright test apps/template/e2e/portal.spec.ts",
+      "pnpm typecheck"
+    ],
+    "checkpoint": "step-06-client-portal",
+    "files": [
+      "packages/web-kit/src/client-portal/**",
+      "apps/template/src/app/portal/page.tsx",
+      "apps/template/e2e/portal.spec.ts",
+      "packages/web-kit/src/index.ts"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T1",
+    "title": "Módulo admin-panel",
+    "epic": "02-admin-y-logica-de-negocio",
+    "dependencies": ["E1-T4", "E1-T5"],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN un usuario con rol `admin` visita `/admin` THE SYSTEM SHALL mostrar el conteo de citas de los próximos 7 días.",
+      "WHEN un usuario con rol `specialist` visita `/admin` THE SYSTEM SHALL redirigir a `/portal`.",
+      "WHEN un admin crea una Cita manualmente desde `/admin/citas` THE SYSTEM SHALL usar el mismo `POST /api/citas` sin un segundo escritor de la colección.",
+      "WHEN solo existe una Sede THE SYSTEM SHALL ocultar el selector de sede en los formularios de `/admin/citas` y preseleccionar la única Sede.",
+      "WHEN `pnpm exec playwright test apps/template/e2e/admin.spec.ts` corre THE SYSTEM SHALL pasar el flujo de crear y listar una Cita desde el admin."
+    ],
+    "verify": [
+      "pnpm exec vitest run packages/web-kit/src/admin-panel",
+      "pnpm --filter template build",
+      "pnpm exec playwright test apps/template/e2e/admin.spec.ts",
+      "pnpm typecheck"
+    ],
+    "checkpoint": "step-07-admin-panel",
+    "files": [
+      "packages/web-kit/src/admin-panel/**",
+      "apps/template/src/app/admin/**",
+      "apps/template/e2e/admin.spec.ts",
+      "packages/web-kit/src/index.ts"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T2",
+    "title": "Módulo crm y adapter de HubSpot",
+    "epic": "02-admin-y-logica-de-negocio",
+    "dependencies": ["E1-T3"],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN `POST /api/leads` recibe un `email` o `phone` válido THE SYSTEM SHALL crear o actualizar un Lead con `status: \"new\"` si es nuevo.",
+      "WHEN `crm.externalSync` está apagado (default) THE SYSTEM SHALL nunca llamar a la API de HubSpot, ni con `HUBSPOT_API_KEY` presente.",
+      "WHEN `crm.externalSync` está encendido y se crea un Lead THE SYSTEM SHALL llamar al adapter de HubSpot con el mapeo de etapa `new -> \"lead\"`.",
+      "WHEN el `CrmAdapter` recibe un status no mapeado THE SYSTEM SHALL lanzar un error tipado en vez de sincronizar un valor arbitrario.",
+      "WHEN una Cita se crea con `clientUid` correspondiente a un Lead existente por email THE SYSTEM SHALL actualizar ese Lead a `status: \"scheduled\"`."
+    ],
+    "verify": [
+      "pnpm exec vitest run packages/web-kit/src/crm",
+      "pnpm typecheck"
+    ],
+    "checkpoint": "step-08-crm",
+    "files": [
+      "packages/web-kit/src/crm/**",
+      "apps/template/src/app/api/leads/route.ts",
+      "packages/web-kit/src/index.ts"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T3",
+    "title": "Módulo notifications (Resend)",
+    "epic": "02-admin-y-logica-de-negocio",
+    "dependencies": ["E1-T5"],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN se crea una Cita vía `POST /api/citas` THE SYSTEM SHALL llamar a `sendAppointmentEmail` con el template \"confirmada\", dirigido al cliente y al admin de la Sede.",
+      "WHEN `PATCH /api/citas/[id]` cambia `status` a `\"cancelled\"` THE SYSTEM SHALL enviar el template \"cancelada\".",
+      "WHEN `RESEND_API_KEY` está ausente al importar `resend-client.ts` THE SYSTEM SHALL lanzar un error nombrado.",
+      "WHEN el envío de email falla THE SYSTEM SHALL registrar el error pero no revertir la creación de la Cita.",
+      "WHEN `pnpm exec vitest run packages/web-kit/src/notifications` corre THE SYSTEM SHALL pasar con 0 fallos."
+    ],
+    "verify": [
+      "pnpm exec vitest run packages/web-kit/src/notifications",
+      "pnpm typecheck"
+    ],
+    "checkpoint": "step-09-notifications",
+    "files": [
+      "packages/web-kit/src/notifications/**",
+      "apps/template/src/app/api/citas/route.ts",
+      "apps/template/src/app/api/citas/[id]/route.ts",
+      "packages/web-kit/src/index.ts"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T4",
+    "title": "Módulo seo-analytics",
+    "epic": "02-admin-y-logica-de-negocio",
+    "dependencies": ["E1-T2"],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN `apps/template` se builda THE SYSTEM SHALL generar `/sitemap.xml` con al menos las rutas `/`, `/agenda`, `/portal`.",
+      "WHEN se solicita `/robots.txt` THE SYSTEM SHALL responder con `Allow: /` y una referencia a `/sitemap.xml`.",
+      "WHEN una página no define `title`/`description` vía `metadata-helper` THE SYSTEM SHALL fallar el build.",
+      "WHEN `NEXT_PUBLIC_GA_MEASUREMENT_ID` está ausente THE SYSTEM SHALL omitir el script de GA4 sin romper el render.",
+      "WHEN se renderiza la home THE SYSTEM SHALL incluir un bloque JSON-LD `LocalBusiness` válido."
+    ],
+    "verify": [
+      "pnpm --filter template build",
+      "pnpm --filter template start &",
+      "sleep 2",
+      "test \"$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/sitemap.xml)\" = \"200\"",
+      "test \"$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/robots.txt)\" = \"200\"",
+      "curl -s http://localhost:3000/ | grep -q \"LocalBusiness\"",
+      "kill %1"
+    ],
+    "checkpoint": "step-10-seo-analytics",
+    "files": [
+      "packages/web-kit/src/seo-analytics/**",
+      "apps/template/src/app/sitemap.ts",
+      "apps/template/src/app/robots.ts",
+      "packages/web-kit/src/index.ts"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T5",
+    "title": "Módulo payments (Stripe)",
+    "epic": "02-admin-y-logica-de-negocio",
+    "dependencies": ["E1-T3"],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN `POST /api/webhooks/stripe` recibe un `Stripe-Signature` inválido THE SYSTEM SHALL responder `400` y escribir cero documentos.",
+      "WHEN `checkout.session.completed` llega con un `event.id` nuevo THE SYSTEM SHALL crear/actualizar un Pedido exactamente una vez.",
+      "WHEN el mismo `event.id` se entrega dos veces THE SYSTEM SHALL responder `200` ambas veces y dejar el conteo de documentos sin cambios.",
+      "WHEN `STRIPE_WEBHOOK_SECRET` está ausente al importar el Route Handler THE SYSTEM SHALL fallar el arranque del build con un error nombrado.",
+      "WHEN un evento no manejado llega THE SYSTEM SHALL responder `200`.",
+      "WHEN `pnpm exec vitest run apps/template/src/app/api/webhooks/stripe` corre THE SYSTEM SHALL reportar 0 fallos."
+    ],
+    "verify": [
+      "pnpm exec vitest run apps/template/src/app/api/webhooks/stripe",
+      "pnpm typecheck"
+    ],
+    "checkpoint": "step-11-payments",
+    "files": [
+      "packages/web-kit/src/payments/**",
+      "apps/template/src/app/api/checkout/route.ts",
+      "apps/template/src/app/api/webhooks/stripe/route.ts",
+      "apps/template/src/app/api/webhooks/stripe/route.test.ts",
+      "packages/web-kit/src/index.ts"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T6",
+    "title": "Módulo ecommerce",
+    "epic": "02-admin-y-logica-de-negocio",
+    "dependencies": ["E2-T5"],
+    "priority": "p2",
+    "acceptance": [
+      "WHEN `/tienda` se visita con al menos un Producto activo THE SYSTEM SHALL listar sus productos filtrados por la Sede por defecto.",
+      "WHEN un producto tiene `inventoryCount: 0` THE SYSTEM SHALL deshabilitar su botón de \"Agregar al carrito\".",
+      "WHEN se agrega un producto al carrito y se hace checkout THE SYSTEM SHALL usar el módulo `payments` sin un segundo camino de pago.",
+      "WHEN no hay ningún Producto activo THE SYSTEM SHALL ocultar la sección de catálogo completa.",
+      "WHEN `pnpm exec playwright test apps/template/e2e/tienda.spec.ts` corre THE SYSTEM SHALL pasar el flujo de agregar un producto al carrito."
+    ],
+    "verify": [
+      "pnpm exec vitest run packages/web-kit/src/ecommerce",
+      "pnpm --filter template build",
+      "pnpm exec playwright test apps/template/e2e/tienda.spec.ts",
+      "pnpm typecheck"
+    ],
+    "checkpoint": "step-12-ecommerce",
+    "files": [
+      "packages/web-kit/src/ecommerce/**",
+      "apps/template/src/app/tienda/page.tsx",
+      "apps/template/e2e/tienda.spec.ts",
+      "packages/web-kit/src/index.ts"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E3-T1",
+    "title": "modules.config.ts y navegación/rutas condicionales",
+    "epic": "03-integracion-y-release",
+    "dependencies": ["E1-T4", "E1-T5", "E1-T6", "E2-T1", "E2-T2", "E2-T3", "E2-T4", "E2-T5", "E2-T6"],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN `modules.config.ts` tiene `ecommerce: false` THE SYSTEM SHALL no incluir el enlace a `/tienda` en la navegación ni en el sitemap.",
+      "WHEN `modules.config.ts` tiene `ecommerce: false` y se builda THE SYSTEM SHALL no incrementar el bundle de la ruta `/` con código de `ecommerce`.",
+      "WHEN todos los módulos activables están en `false` THE SYSTEM SHALL seguir buildando y arrancando sin error.",
+      "WHEN `design-system` se busca en `modules.config.ts` THE SYSTEM SHALL no encontrar ningún flag para él."
+    ],
+    "verify": [
+      "pnpm exec vitest run apps/template/modules.config.test.ts",
+      "pnpm --filter template build",
+      "pnpm typecheck"
+    ],
+    "checkpoint": "step-13-modules-config",
+    "files": [
+      "apps/template/modules.config.ts",
+      "apps/template/src/components/nav/AdminNav.tsx",
+      "apps/template/modules.config.test.ts"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E3-T2",
+    "title": "Endurecimiento de CI",
+    "epic": "03-integracion-y-release",
+    "dependencies": ["E3-T1"],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN se abre un PR THE SYSTEM SHALL correr el pipeline completo (lint -> format -> typecheck -> unit -> rules -> build -> e2e).",
+      "WHEN cualquiera de esas etapas falla THE SYSTEM SHALL detener el pipeline sin ejecutar el release.",
+      "WHEN el pipeline corre localmente ejecutando cada línea del job en orden THE SYSTEM SHALL salir con código 0 en un checkout limpio."
+    ],
+    "verify": [
+      "pnpm install --frozen-lockfile",
+      "pnpm exec playwright install --with-deps chromium",
+      "pnpm lint",
+      "pnpm format",
+      "pnpm typecheck",
+      "pnpm test",
+      "pnpm exec firebase emulators:exec --only firestore,auth \"pnpm exec vitest run tests/rules\"",
+      "pnpm build",
+      "pnpm test:e2e"
+    ],
+    "checkpoint": "step-14-ci-hardening",
+    "files": [
+      ".github/workflows/ci.yml",
+      "apps/template/e2e/ci-smoke.spec.ts"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E3-T3",
+    "title": "Automatización de release con Changesets",
+    "epic": "03-integracion-y-release",
+    "dependencies": ["E1-T1"],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN `pnpm changeset status` corre con el changeset inicial presente THE SYSTEM SHALL reportar un bump pendiente para `@mgorrin/web-kit`.",
+      "WHEN `pnpm --filter @mgorrin/web-kit build` corre antes de publicar THE SYSTEM SHALL salir con código 0.",
+      "WHEN se inspecciona `release.yml` THE SYSTEM SHALL declarar `permissions: packages: write` explícitamente."
+    ],
+    "verify": [
+      "pnpm exec changeset status --since=step-01-monorepo-bootstrap",
+      "pnpm --filter @mgorrin/web-kit build",
+      "grep -q \"packages: write\" .github/workflows/release.yml"
+    ],
+    "checkpoint": "step-15-release-automation",
+    "files": [
+      ".changeset/initial-release.md",
+      ".github/workflows/release.yml",
+      ".changeset/config.json"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E3-T4",
+    "title": "Scaffolder scripts/setup.js",
+    "epic": "03-integracion-y-release",
+    "dependencies": ["E3-T1"],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN `node scripts/setup.js --dry-run --name=demo --out=<tmp>` corre THE SYSTEM SHALL escribir `<tmp>/modules.config.ts` con los flags por defecto y salir con código 0.",
+      "WHEN el directorio destino ya existe y no está vacío THE SYSTEM SHALL abortar con código 1 sin sobrescribir nada.",
+      "WHEN el script copia `apps/template` THE SYSTEM SHALL excluir `node_modules/` y `.next/` del destino.",
+      "WHEN `pnpm exec vitest run scripts/setup.test.ts` corre THE SYSTEM SHALL pasar con 0 fallos."
+    ],
+    "verify": [
+      "pnpm exec vitest run scripts/setup.test.ts",
+      "TMP_OUT=\"$(mktemp -d)\" && node scripts/setup.js --dry-run --name=demo --out=\"$TMP_OUT\" && test -f \"$TMP_OUT/modules.config.ts\" && rm -rf \"$TMP_OUT\""
+    ],
+    "checkpoint": "step-16-setup-script",
+    "files": [
+      "scripts/setup.js",
+      "scripts/setup.test.ts"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E3-T5",
+    "title": "Documentación (README + docs/modules)",
+    "epic": "03-integracion-y-release",
+    "dependencies": ["E3-T2", "E3-T3", "E3-T4"],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN `node --experimental-strip-types docs/check-docs.ts` corre THE SYSTEM SHALL confirmar que existe un `docs/modules/<módulo>.md` por cada módulo exportado en `packages/web-kit/src/index.ts`, saliendo con código 1 si falta alguno.",
+      "WHEN se lee `README.md` THE SYSTEM SHALL incluir la configuración exacta de `.npmrc` con los dos scopes de token.",
+      "WHEN se cuentan los archivos en `docs/modules/` THE SYSTEM SHALL haber exactamente 11."
+    ],
+    "verify": [
+      "node --experimental-strip-types docs/check-docs.ts",
+      "test \"$(ls docs/modules | wc -l)\" = \"11\"",
+      "grep -q \"write:packages\" README.md"
+    ],
+    "checkpoint": "step-17-documentation",
+    "files": [
+      "README.md",
+      "docs/modules/*.md",
+      "docs/check-docs.ts"
+    ],
+    "status": "pending"
+  }
+]

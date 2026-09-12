@@ -1,0 +1,35 @@
+# Dependencias e instalación
+node_modules/
+.pnpm-store/
+
+# Build
+dist/
+.next/
+out/
+*.tsbuildinfo
+
+# Entorno — nunca el ejemplo
+.env
+.env.*.local
+.env.local
+!.env.example
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Editor / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+
+# Reportes de test
+playwright-report/
+test-results/
+coverage/
+
+# El propio bundle del blueprint no se distribuye como parte del proyecto en ejecución,
+# pero SÍ se commitea (ver tabla "Archivos que deben commitearse" en §10) — no se ignora.
+!blueprints/

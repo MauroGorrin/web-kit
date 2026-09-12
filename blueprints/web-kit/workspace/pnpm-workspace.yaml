@@ -1,0 +1,21 @@
+packages:
+  - "packages/*"
+  - "apps/*"
+
+# El bundle del blueprint vive dentro del repo en blueprints/web-kit/ y NO debe
+# resolverse como paquete del workspace ni como fuente de ningún tooling.
+
+# Confirmado por ejecución real (smoke test): pnpm 12 bloquea por defecto los postinstall de
+# paquetes nativos (ERR_PNPM_IGNORED_BUILDS) y las publicaciones muy recientes
+# (ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION). Sin esto, tanto el Bootstrap de §10 como el scaffold de
+# create-next-app del paso 1 abortan a mitad de instalación — y create-next-app no sabe recuperarse
+# solo de ese error (aborta su propio install sin reintentar). Preaprobar aquí evita ambos bloqueos
+# antes de que ocurran, en vez de depender de `pnpm approve-builds` reactivo.
+allowBuilds:
+  "@firebase/util": true
+  protobufjs: true
+  unrs-resolver: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - lucide-react@1.45.0
+  - resend@6.28.0
