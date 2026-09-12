@@ -35,7 +35,9 @@
     "id": "E1-T2",
     "title": "Módulo design-system y congelamiento de la superficie pública",
     "epic": "01-foundation",
-    "dependencies": ["E1-T1"],
+    "dependencies": [
+      "E1-T1"
+    ],
     "priority": "p0",
     "acceptance": [
       "WHEN `pnpm --filter @mgorrin/web-kit build` corre THE SYSTEM SHALL exportar `Button`, `Card`, `Input`, `Dialog` desde `dist/design-system/index.js`.",
@@ -60,13 +62,15 @@
       "apps/template/e2e/home.spec.ts",
       "docs/surface.md"
     ],
-    "status": "in_progress"
+    "status": "done"
   },
   {
     "id": "E1-T3",
     "title": "Módulo auth-rbac y reglas de seguridad de users",
     "epic": "01-foundation",
-    "dependencies": ["E1-T2"],
+    "dependencies": [
+      "E1-T2"
+    ],
     "priority": "p0",
     "acceptance": [
       "WHEN un usuario sin sesión intenta leer `users/{otroUid}` en el emulador THE SYSTEM SHALL denegar el acceso.",
@@ -96,7 +100,9 @@
     "id": "E1-T4",
     "title": "Módulo multi-location",
     "epic": "01-foundation",
-    "dependencies": ["E1-T3"],
+    "dependencies": [
+      "E1-T3"
+    ],
     "priority": "p1",
     "acceptance": [
       "WHEN se crea la primera Sede de un proyecto THE SYSTEM SHALL marcarla `isDefault: true` automáticamente.",
@@ -122,7 +128,9 @@
     "id": "E1-T5",
     "title": "Módulo scheduling y rutas de la API de citas",
     "epic": "01-foundation",
-    "dependencies": ["E1-T4"],
+    "dependencies": [
+      "E1-T4"
+    ],
     "priority": "p0",
     "acceptance": [
       "WHEN `POST /api/citas` recibe un body válido con sesión THE SYSTEM SHALL crear un documento en `citas` con `status: \"scheduled\"` y responder `201`.",
@@ -153,7 +161,10 @@
     "id": "E1-T6",
     "title": "Módulo client-portal",
     "epic": "01-foundation",
-    "dependencies": ["E1-T3", "E1-T5"],
+    "dependencies": [
+      "E1-T3",
+      "E1-T5"
+    ],
     "priority": "p1",
     "acceptance": [
       "WHEN un usuario autenticado con una Cita futura visita `/portal` THE SYSTEM SHALL mostrar fecha, hora y estado de esa Cita.",
@@ -180,7 +191,10 @@
     "id": "E2-T1",
     "title": "Módulo admin-panel",
     "epic": "02-admin-y-logica-de-negocio",
-    "dependencies": ["E1-T4", "E1-T5"],
+    "dependencies": [
+      "E1-T4",
+      "E1-T5"
+    ],
     "priority": "p0",
     "acceptance": [
       "WHEN un usuario con rol `admin` visita `/admin` THE SYSTEM SHALL mostrar el conteo de citas de los próximos 7 días.",
@@ -208,7 +222,9 @@
     "id": "E2-T2",
     "title": "Módulo crm y adapter de HubSpot",
     "epic": "02-admin-y-logica-de-negocio",
-    "dependencies": ["E1-T3"],
+    "dependencies": [
+      "E1-T3"
+    ],
     "priority": "p1",
     "acceptance": [
       "WHEN `POST /api/leads` recibe un `email` o `phone` válido THE SYSTEM SHALL crear o actualizar un Lead con `status: \"new\"` si es nuevo.",
@@ -233,7 +249,9 @@
     "id": "E2-T3",
     "title": "Módulo notifications (Resend)",
     "epic": "02-admin-y-logica-de-negocio",
-    "dependencies": ["E1-T5"],
+    "dependencies": [
+      "E1-T5"
+    ],
     "priority": "p1",
     "acceptance": [
       "WHEN se crea una Cita vía `POST /api/citas` THE SYSTEM SHALL llamar a `sendAppointmentEmail` con el template \"confirmada\", dirigido al cliente y al admin de la Sede.",
@@ -259,7 +277,9 @@
     "id": "E2-T4",
     "title": "Módulo seo-analytics",
     "epic": "02-admin-y-logica-de-negocio",
-    "dependencies": ["E1-T2"],
+    "dependencies": [
+      "E1-T2"
+    ],
     "priority": "p1",
     "acceptance": [
       "WHEN `apps/template` se builda THE SYSTEM SHALL generar `/sitemap.xml` con al menos las rutas `/`, `/agenda`, `/portal`.",
@@ -290,7 +310,9 @@
     "id": "E2-T5",
     "title": "Módulo payments (Stripe)",
     "epic": "02-admin-y-logica-de-negocio",
-    "dependencies": ["E1-T3"],
+    "dependencies": [
+      "E1-T3"
+    ],
     "priority": "p0",
     "acceptance": [
       "WHEN `POST /api/webhooks/stripe` recibe un `Stripe-Signature` inválido THE SYSTEM SHALL responder `400` y escribir cero documentos.",
@@ -318,7 +340,9 @@
     "id": "E2-T6",
     "title": "Módulo ecommerce",
     "epic": "02-admin-y-logica-de-negocio",
-    "dependencies": ["E2-T5"],
+    "dependencies": [
+      "E2-T5"
+    ],
     "priority": "p2",
     "acceptance": [
       "WHEN `/tienda` se visita con al menos un Producto activo THE SYSTEM SHALL listar sus productos filtrados por la Sede por defecto.",
@@ -346,7 +370,17 @@
     "id": "E3-T1",
     "title": "modules.config.ts y navegación/rutas condicionales",
     "epic": "03-integracion-y-release",
-    "dependencies": ["E1-T4", "E1-T5", "E1-T6", "E2-T1", "E2-T2", "E2-T3", "E2-T4", "E2-T5", "E2-T6"],
+    "dependencies": [
+      "E1-T4",
+      "E1-T5",
+      "E1-T6",
+      "E2-T1",
+      "E2-T2",
+      "E2-T3",
+      "E2-T4",
+      "E2-T5",
+      "E2-T6"
+    ],
     "priority": "p0",
     "acceptance": [
       "WHEN `modules.config.ts` tiene `ecommerce: false` THE SYSTEM SHALL no incluir el enlace a `/tienda` en la navegación ni en el sitemap.",
@@ -371,7 +405,9 @@
     "id": "E3-T2",
     "title": "Endurecimiento de CI",
     "epic": "03-integracion-y-release",
-    "dependencies": ["E3-T1"],
+    "dependencies": [
+      "E3-T1"
+    ],
     "priority": "p0",
     "acceptance": [
       "WHEN se abre un PR THE SYSTEM SHALL correr el pipeline completo (lint -> format -> typecheck -> unit -> rules -> build -> e2e).",
@@ -400,7 +436,9 @@
     "id": "E3-T3",
     "title": "Automatización de release con Changesets",
     "epic": "03-integracion-y-release",
-    "dependencies": ["E1-T1"],
+    "dependencies": [
+      "E1-T1"
+    ],
     "priority": "p1",
     "acceptance": [
       "WHEN `pnpm changeset status` corre con el changeset inicial presente THE SYSTEM SHALL reportar un bump pendiente para `@mgorrin/web-kit`.",
@@ -424,7 +462,9 @@
     "id": "E3-T4",
     "title": "Scaffolder scripts/setup.js",
     "epic": "03-integracion-y-release",
-    "dependencies": ["E3-T1"],
+    "dependencies": [
+      "E3-T1"
+    ],
     "priority": "p1",
     "acceptance": [
       "WHEN `node scripts/setup.js --dry-run --name=demo --out=<tmp>` corre THE SYSTEM SHALL escribir `<tmp>/modules.config.ts` con los flags por defecto y salir con código 0.",
@@ -447,7 +487,11 @@
     "id": "E3-T5",
     "title": "Documentación (README + docs/modules)",
     "epic": "03-integracion-y-release",
-    "dependencies": ["E3-T2", "E3-T3", "E3-T4"],
+    "dependencies": [
+      "E3-T2",
+      "E3-T3",
+      "E3-T4"
+    ],
     "priority": "p1",
     "acceptance": [
       "WHEN `node --experimental-strip-types docs/check-docs.ts` corre THE SYSTEM SHALL confirmar que existe un `docs/modules/<módulo>.md` por cada módulo exportado en `packages/web-kit/src/index.ts`, saliendo con código 1 si falta alguno.",
