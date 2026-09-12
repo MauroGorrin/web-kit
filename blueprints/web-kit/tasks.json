@@ -364,7 +364,7 @@
       "apps/template/e2e/tienda.spec.ts",
       "packages/web-kit/src/index.ts"
     ],
-    "status": "in_progress"
+    "status": "done"
   },
   {
     "id": "E3-T1",
