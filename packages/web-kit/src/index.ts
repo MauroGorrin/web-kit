@@ -57,3 +57,6 @@ export type {
 } from "./notifications/templates.ts";
 export { renderAppointmentEmail } from "./notifications/templates.ts";
 export { MissingResendApiKeyError } from "./notifications/resend-credentials.ts";
+// seo-analytics no tiene efectos secundarios al importar — seguro de
+// reexportar completo.
+export * from "./seo-analytics/index.ts";

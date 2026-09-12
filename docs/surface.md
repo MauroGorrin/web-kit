@@ -59,6 +59,9 @@
 | `renderAppointmentEmail`               | `notifications`  | E2-T3 — raíz y subpath                |
 | `MissingResendApiKeyError`             | `notifications`  | E2-T3 — raíz y subpath                |
 | `sendAppointmentEmail`                 | `notifications`  | E2-T3 — **solo subpath**, server-only |
+| `buildMetadata`                        | `seo-analytics`  | E2-T4 — raíz y subpath                |
+| `buildLocalBusinessJsonLd`             | `seo-analytics`  | E2-T4 — raíz y subpath                |
+| `Ga4Script`                            | `seo-analytics`  | E2-T4 — raíz y subpath                |
 
 ## Exports de tipo
 
@@ -97,3 +100,9 @@
 | `AppointmentEmailData`      | `notifications`  | E2-T3 — raíz y subpath   |
 | `RenderedEmail`             | `notifications`  | E2-T3 — raíz y subpath   |
 | `SendAppointmentEmailInput` | `notifications`  | E2-T3 — **solo subpath** |
+| `MissingPageMetadataError`  | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| `PageMetadata`              | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| `PageMetadataInput`         | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| `LocalBusinessData`         | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| `LocalBusinessJsonLd`       | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| `Ga4ScriptProps`            | `seo-analytics`  | E2-T4 — raíz y subpath   |
