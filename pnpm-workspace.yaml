@@ -41,3 +41,9 @@ overrides:
   "@opentelemetry/core": ">=2.8.0"
   qs: ">=6.16.0"
   csv-parse: ">=7.0.2"
+  # jose@6.x es ESM puro; jwks-rsa@4.1.0 (dependencia de firebase-admin/auth
+  # para verificación vía JWKS) le hace un `require()` síncrono — rompe con
+  # ERR_REQUIRE_ESM en el runtime de Vercel (nunca en dev local). jose dejó
+  # de soportar CJS recién en la v5 — se pinnea SOLO bajo jwks-rsa (scoped)
+  # para no tocar el jose@6 que usa otro paquete distinto en el árbol.
+  "jwks-rsa>jose": "^4.15.9"
