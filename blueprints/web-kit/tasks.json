@@ -456,7 +456,7 @@
       ".github/workflows/release.yml",
       ".changeset/config.json"
     ],
-    "status": "in_progress"
+    "status": "done"
   },
   {
     "id": "E3-T4",
@@ -481,7 +481,7 @@
       "scripts/setup.js",
       "scripts/setup.test.ts"
     ],
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "id": "E3-T5",
