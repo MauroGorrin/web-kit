@@ -14,6 +14,12 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // `firebase-admin` arrastra `jwks-rsa` -> `jose` (ESM puro). Bundleado por
+  // Turbopack en la función serverless, ese `require()` rompe con
+  // ERR_REQUIRE_ESM en Vercel (confirmado: 500 real en producción, nunca en
+  // dev local). `serverExternalPackages` saca el paquete del bundle y deja
+  // que Node lo resuelva nativo desde `node_modules` en runtime.
+  serverExternalPackages: ["firebase-admin"],
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
