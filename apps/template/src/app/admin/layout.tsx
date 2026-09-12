@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getSession } from "@mgorrin/web-kit/auth-rbac";
 import { hasRequiredRole } from "@mgorrin/web-kit";
+import { AdminNav } from "../../components/nav/AdminNav";
 
 // Reforzado aquí, en el layout — cubre `/admin` y toda ruta hija. Ver
 // CLAUDE.md, "Regla de refuerzo": esto es la verificación real, no un guard
@@ -17,5 +18,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect("/portal");
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <AdminNav />
+      {children}
+    </>
+  );
 }
