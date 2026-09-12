@@ -12,9 +12,11 @@ export function CartSummary() {
   const { items, totalCents } = useCart();
 
   async function handleCheckout() {
+    // El servidor resuelve `name`/`priceCents` reales desde Firestore por
+    // `productoId` — nunca confiar en el precio que traiga el estado del
+    // carrito del cliente (ver `apps/template/src/app/api/checkout/route.ts`).
     const lineItems = items.map((item) => ({
-      name: item.producto.name,
-      priceCents: item.producto.priceCents,
+      productoId: item.producto.id,
       quantity: item.quantity,
     }));
 

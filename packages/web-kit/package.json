@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mgorrin/web-kit.git",
+    "url": "git+https://github.com/MauroGorrin/web-kit.git",
     "directory": "packages/web-kit"
   },
   "files": [

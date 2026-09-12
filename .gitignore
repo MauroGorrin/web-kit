@@ -20,6 +20,17 @@ firebase-debug.log
 firestore-debug.log
 ui-debug.log
 
+# Credenciales / claves — nunca commitear (ver CN-026 del reporte Cyber Neo)
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+id_rsa
+id_ed25519
+credentials.json
+service-account*.json
+
 # Editor / OS
 .DS_Store
 .vscode/*

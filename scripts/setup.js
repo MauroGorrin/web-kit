@@ -113,7 +113,21 @@ async function run(argv) {
     return;
   }
 
-  if (isDirNonEmpty(args.out)) {
+  // Normaliza `--out` antes de tocar el filesystem — ver CN-019 del reporte
+  // Cyber Neo. El destino puede ser cualquier directorio fuera del repo (es
+  // el uso normal de este scaffolder), pero nunca uno que resuelva DENTRO
+  // del propio repo: evita pisar `apps/template` o cualquier otro código
+  // fuente por un `--out` mal escrito.
+  const resolvedOut = path.resolve(args.out);
+  if (resolvedOut === REPO_ROOT || resolvedOut.startsWith(REPO_ROOT + path.sep)) {
+    console.error(
+      `El directorio destino "${args.out}" resuelve dentro del propio repo (${REPO_ROOT}) — abortando.`,
+    );
+    process.exitCode = 1;
+    return;
+  }
+
+  if (isDirNonEmpty(resolvedOut)) {
     console.error(
       `El directorio destino "${args.out}" ya existe y no está vacío — abortando sin sobrescribir nada.`,
     );
@@ -121,7 +135,7 @@ async function run(argv) {
     return;
   }
 
-  fs.mkdirSync(args.out, { recursive: true });
+  fs.mkdirSync(resolvedOut, { recursive: true });
 
   let flags = DEFAULT_MODULE_FLAGS;
 
@@ -130,15 +144,15 @@ async function run(argv) {
     // el árbol completo de `apps/template` (evita una copia pesada solo para
     // confirmar que el scaffolder corrió). Ver acceptance #1 de E3-T4.
   } else {
-    copyTemplate(args.out);
+    copyTemplate(resolvedOut);
     flags = await promptModuleFlags();
   }
 
   const configContent = buildModulesConfigContent(flags);
-  fs.writeFileSync(path.join(args.out, "modules.config.ts"), configContent, "utf8");
+  fs.writeFileSync(path.join(resolvedOut, "modules.config.ts"), configContent, "utf8");
 
   console.log(
-    `Proyecto "${args.name}" generado en ${args.out}${args.dryRun ? " (dry-run: sin copiar apps/template)" : ""}.`,
+    `Proyecto "${args.name}" generado en ${resolvedOut}${args.dryRun ? " (dry-run: sin copiar apps/template)" : ""}.`,
   );
 }
 

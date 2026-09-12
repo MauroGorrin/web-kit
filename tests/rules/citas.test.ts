@@ -6,7 +6,7 @@ import {
   initializeTestEnvironment,
   type RulesTestEnvironment,
 } from "@firebase/rules-unit-testing";
-import { collection, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 
 // Sufijo por archivo — ver comentario en tests/rules/users.test.ts.
 const PROJECT_ID = `${process.env.FIREBASE_ADMIN_PROJECT_ID ?? "web-kit-test"}-citas`;
@@ -63,6 +63,35 @@ describe("firestore.rules — citas", () => {
     await assertFails(getDocs(collection(unauth.firestore(), "citas")));
   });
 
+  it("deniega leer la cita de otro cliente a quien no es admin ni el dueño", async () => {
+    await seedUser("otro-uid", "specialist");
+    await seedCita("cita-1", "cliente-uid");
+    const otro = testEnv.authenticatedContext("otro-uid");
+    await assertFails(getDocs(collection(otro.firestore(), "citas")));
+  });
+
+  it("permite al cliente dueño leer su propia cita", async () => {
+    await seedUser("cliente-uid", "specialist");
+    await seedCita("cita-1", "cliente-uid");
+    const cliente = testEnv.authenticatedContext("cliente-uid");
+    // Una regla de `list` que depende de `resource.data` necesita que la
+    // query traiga el filtro que la prueba — Firestore no evalúa un
+    // `list` sin restricciones documento por documento. Cualquier código
+    // cliente que liste sus propias citas debe filtrar así.
+    await assertSucceeds(
+      getDocs(
+        query(collection(cliente.firestore(), "citas"), where("clientUid", "==", "cliente-uid")),
+      ),
+    );
+  });
+
+  it("permite a un admin leer cualquier cita", async () => {
+    await seedUser("admin-uid", "admin");
+    await seedCita("cita-1", "cliente-uid");
+    const admin = testEnv.authenticatedContext("admin-uid");
+    await assertSucceeds(getDocs(collection(admin.firestore(), "citas")));
+  });
+
   it("permite crear una cita a cualquier usuario con sesión", async () => {
     await seedUser("cliente-uid", "specialist");
     const cliente = testEnv.authenticatedContext("cliente-uid");
@@ -73,6 +102,38 @@ describe("firestore.rules — citas", () => {
         especialistaId: null,
         datetime: new Date("2026-10-01T15:00:00Z"),
         status: "scheduled",
+        source: "calendly",
+        notes: "",
+      }),
+    );
+  });
+
+  it("deniega crear una cita suplantando el clientUid de otro usuario", async () => {
+    await seedUser("cliente-uid", "specialist");
+    const cliente = testEnv.authenticatedContext("cliente-uid");
+    await assertFails(
+      setDoc(doc(cliente.firestore(), "citas", "cita-1"), {
+        clientUid: "otro-uid",
+        sedeId: "sede-1",
+        especialistaId: null,
+        datetime: new Date("2026-10-01T15:00:00Z"),
+        status: "scheduled",
+        source: "calendly",
+        notes: "",
+      }),
+    );
+  });
+
+  it("deniega crear una cita con un status distinto de 'scheduled'", async () => {
+    await seedUser("cliente-uid", "specialist");
+    const cliente = testEnv.authenticatedContext("cliente-uid");
+    await assertFails(
+      setDoc(doc(cliente.firestore(), "citas", "cita-1"), {
+        clientUid: "cliente-uid",
+        sedeId: "sede-1",
+        especialistaId: null,
+        datetime: new Date("2026-10-01T15:00:00Z"),
+        status: "confirmed",
         source: "calendly",
         notes: "",
       }),

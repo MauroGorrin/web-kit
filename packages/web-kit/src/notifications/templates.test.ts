@@ -20,4 +20,13 @@ describe("renderAppointmentEmail", () => {
     expect(email.subject).toContain("cancelada");
     expect(email.html).toContain("Ana");
   });
+
+  it("escapa HTML en clienteName/sedeName — CN-014 del reporte Cyber Neo", () => {
+    const email = renderAppointmentEmail("confirmada", {
+      ...DATA,
+      clienteName: "<img src=x onerror=alert(1)>",
+    });
+    expect(email.html).not.toContain("<img");
+    expect(email.html).toContain("&lt;img");
+  });
 });

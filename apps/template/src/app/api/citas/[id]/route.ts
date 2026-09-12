@@ -28,6 +28,13 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   // "Protección de rutas". El cliente dueño de la cita se maneja aparte
   // (client-portal, E1-T6), no aquí.
   if (!hasRequiredRole(session.role, ["admin", "super_admin"])) {
+    // Evento de seguridad — intento de escalar privilegios / probar límites
+    // de rol (ver CN-013 del reporte Cyber Neo).
+    console.warn("[citas] intento de PATCH sin rol suficiente", {
+      uid: session.uid,
+      role: session.role,
+      citaId: id,
+    });
     return NextResponse.json({ ok: false, error: { code: "FORBIDDEN" } }, { status: 403 });
   }
 

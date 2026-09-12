@@ -7,6 +7,7 @@ export {
 } from "./metadata-helper.ts";
 export {
   buildLocalBusinessJsonLd,
+  toJsonLdScript,
   type LocalBusinessData,
   type LocalBusinessJsonLd,
 } from "./local-business-jsonld.ts";

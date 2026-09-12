@@ -7,6 +7,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   query,
   setDoc,
@@ -35,6 +36,17 @@ export async function listProductosBySede(sedeId: string): Promise<Producto[]> {
     query(collection(getFirebaseDb(), PRODUCTOS), where("sedeId", "==", sedeId)),
   );
   return snapshot.docs.map((d) => toProducto(d.id, d.data()));
+}
+
+/**
+ * Lectura pública de un solo Producto por id. Fuente de verdad server-side
+ * para resolver precios reales — nunca confiar en un `priceCents` que llegue
+ * desde el cliente (ver `apps/template/src/app/api/checkout/route.ts`).
+ */
+export async function getProductoById(id: string): Promise<Producto | null> {
+  const snapshot = await getDoc(doc(getFirebaseDb(), PRODUCTOS, id));
+  if (!snapshot.exists()) return null;
+  return toProducto(snapshot.id, snapshot.data());
 }
 
 export async function createProducto(input: CreateProductoInput): Promise<Producto> {

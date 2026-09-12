@@ -19,7 +19,14 @@ export async function POST(request: NextRequest) {
   let event;
   try {
     event = provider.verifyWebhookSignature(rawBody, signature);
-  } catch {
+  } catch (error) {
+    // Evento de seguridad — un webhook con firma inválida es la señal
+    // canónica de un intento de forjar un evento de Stripe (ver CN-013 del
+    // reporte Cyber Neo). Nunca loguear la firma ni el body crudo.
+    console.warn("[stripe-webhook] firma inválida, evento rechazado", {
+      ip: request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "unknown",
+      error: error instanceof Error ? error.message : String(error),
+    });
     // Firma inválida — 400, cero documentos escritos (acceptance #1).
     return NextResponse.json({ ok: false, error: { code: "BAD_SIGNATURE" } }, { status: 400 });
   }

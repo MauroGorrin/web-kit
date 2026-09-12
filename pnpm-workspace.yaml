@@ -19,3 +19,21 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - lucide-react@1.45.0
   - resend@6.28.0
+
+# Fuerza versiones transitivas parcheadas — ver hallazgos CN-006/007/015/016
+# del reporte Cyber Neo (`pnpm audit`). `postcss`/`sharp` llegan vía `next`;
+# `uuid` vía `firebase-admin`.
+#
+# `stream-json` queda deliberadamente SIN override: forzarlo a >=3.5.0 rompe
+# `firebase-tools` (`Cannot find module '.../stream-json/src/filters/Pick'`
+# — el layout de exports cambió entre major versions). CN-016 es dev-only
+# (emulador local, nunca llega a producción) y `firebase-tools` no tiene
+# todavía una versión propia que traiga `stream-json` parcheado — repetir el
+# intento cuando la libere.
+overrides:
+  postcss: ">=8.5.18"
+  sharp: ">=0.35.4"
+  uuid: ">=11.1.1"
+  "@opentelemetry/core": ">=2.8.0"
+  qs: ">=6.16.0"
+  csv-parse: ">=7.0.2"

@@ -43,8 +43,16 @@ service cloud.firestore {
 
     // --- citas (scheduling, paso 5) ---
     match /citas/{citaId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn();
+      // Solo el dueño (`clientUid`) o un admin puede leer — antes cualquier
+      // usuario autenticado podía leer las citas de TODOS los clientes.
+      allow read: if isAdminOrAbove() || (isSignedIn() && resource.data.clientUid == request.auth.uid);
+      // El estado inicial de una Cita creada por el cliente siempre es
+      // "scheduled" (lo mismo que fuerza `scheduling/normalize.ts` en el
+      // camino server) y `clientUid` no puede suplantar a otro usuario.
+      allow create: if isSignedIn()
+        && request.resource.data.status == 'scheduled'
+        && (request.resource.data.clientUid == null
+          || request.resource.data.clientUid == request.auth.uid);
       allow update, delete: if isAdminOrAbove() || (isSignedIn() && resource.data.clientUid == request.auth.uid);
     }
 

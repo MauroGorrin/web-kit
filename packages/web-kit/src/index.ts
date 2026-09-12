@@ -15,6 +15,11 @@ export * from "./design-system/index.ts";
 export type { Role, SessionUser } from "./auth-rbac/types.ts";
 export { hasRequiredRole, useRoleGuard } from "./auth-rbac/use-role-guard.ts";
 export { getFirebaseAuth, getFirebaseDb } from "./auth-rbac/firebase-client.ts";
+export {
+  GoogleSignInButton,
+  type GoogleSignInButtonProps,
+} from "./auth-rbac/GoogleSignInButton.tsx";
+export { SignOutButton } from "./auth-rbac/SignOutButton.tsx";
 // multi-location, client-portal y admin-panel no tienen efectos secundarios
 // al importar (sus repositorios usan el SDK cliente desde componentes
 // `"use client"`, o leen colecciones públicas) — seguro de reexportar

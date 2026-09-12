@@ -7,6 +7,13 @@ const GA4_SCRIPT_ID = "ga4-init";
 export interface Ga4ScriptProps {
   /** Por defecto lee `NEXT_PUBLIC_GA_MEASUREMENT_ID` — ver blueprint §11. */
   measurementId?: string;
+  /**
+   * Nonce por request de la CSP (`middleware.ts` de `apps/template`) — sin
+   * esto, el `<script>` inline de inicialización de gtag lo bloquea
+   * `script-src` (ver CN-004 del reporte Cyber Neo). `undefined` es válido
+   * para consumidores sin CSP configurada.
+   */
+  nonce?: string;
 }
 
 /**
@@ -18,6 +25,7 @@ export interface Ga4ScriptProps {
  */
 export function Ga4Script({
   measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
+  nonce,
 }: Ga4ScriptProps) {
   React.useEffect(() => {
     if (!measurementId) return;
@@ -26,16 +34,18 @@ export function Ga4Script({
     const gtagSrc = document.createElement("script");
     gtagSrc.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
     gtagSrc.async = true;
+    if (nonce) gtagSrc.nonce = nonce;
     document.head.appendChild(gtagSrc);
 
     const init = document.createElement("script");
     init.id = GA4_SCRIPT_ID;
+    if (nonce) init.nonce = nonce;
     init.textContent = `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', '${measurementId}');`;
     document.head.appendChild(init);
-  }, [measurementId]);
+  }, [measurementId, nonce]);
 
   return null;
 }

@@ -20,9 +20,5 @@ cita, estado y datos de cuenta. Ver `CLAUDE.md`, regla de código #7, y blueprin
 `apps/template/src/app/portal/page.tsx` — Server Component dinámico (`force-dynamic`): sin sesión
 válida redirige a `/`; con sesión, resuelve la próxima cita vía `scheduling.listUpcomingCitasForClient`.
 
-## Limitación conocida
-
-No existe todavía una ruta que emita la cookie de sesión a partir de un login real de Google — el
-flujo de login está descrito narrativamente en el blueprint pero ninguna tarea lo construye. Los
-tests de `/portal` cubren el caso "sin sesión → redirige"; los estados autenticados se prueban a
-nivel de componente (`NextAppointmentCard.test.tsx`), no end-to-end.
+Login: `auth-rbac` → `GoogleSignInButton` (ver `docs/modules/auth-rbac.md`) — un cliente sin cuenta
+llega aquí después de "Continuar con Google" en la nav pública.

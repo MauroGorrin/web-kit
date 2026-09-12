@@ -10,6 +10,7 @@ export type {
 export {
   createProducto,
   deleteProducto,
+  getProductoById,
   listProductosBySede,
   updateProducto,
 } from "./repository.ts";
