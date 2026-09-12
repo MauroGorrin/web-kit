@@ -15,23 +15,33 @@
 
 ## Exports de valor
 
-| Export                                 | Módulo          | Desde                                 |
-| -------------------------------------- | --------------- | ------------------------------------- |
-| `Button`                               | `design-system` | E1-T2 — raíz y subpath                |
-| `Card`                                 | `design-system` | E1-T2 — raíz y subpath                |
-| `Input`                                | `design-system` | E1-T2 — raíz y subpath                |
-| `Dialog`                               | `design-system` | E1-T2 — raíz y subpath                |
-| `getFirebaseAuth`                      | `auth-rbac`     | E1-T3 — raíz y subpath, perezoso      |
-| `getFirebaseDb`                        | `auth-rbac`     | E1-T3 — raíz y subpath, perezoso      |
-| `hasRequiredRole`                      | `auth-rbac`     | E1-T3 — raíz y subpath                |
-| `useRoleGuard`                         | `auth-rbac`     | E1-T3 — raíz y subpath                |
-| `getSession`                           | `auth-rbac`     | E1-T3 — **solo subpath**, server-only |
-| `MissingFirebaseAdminCredentialsError` | `auth-rbac`     | E1-T3 — **solo subpath**, server-only |
+| Export                                 | Módulo           | Desde                                 |
+| -------------------------------------- | ---------------- | ------------------------------------- |
+| `Button`                               | `design-system`  | E1-T2 — raíz y subpath                |
+| `Card`                                 | `design-system`  | E1-T2 — raíz y subpath                |
+| `Input`                                | `design-system`  | E1-T2 — raíz y subpath                |
+| `Dialog`                               | `design-system`  | E1-T2 — raíz y subpath                |
+| `getFirebaseAuth`                      | `auth-rbac`      | E1-T3 — raíz y subpath, perezoso      |
+| `getFirebaseDb`                        | `auth-rbac`      | E1-T3 — raíz y subpath, perezoso      |
+| `hasRequiredRole`                      | `auth-rbac`      | E1-T3 — raíz y subpath                |
+| `useRoleGuard`                         | `auth-rbac`      | E1-T3 — raíz y subpath                |
+| `getSession`                           | `auth-rbac`      | E1-T3 — **solo subpath**, server-only |
+| `MissingFirebaseAdminCredentialsError` | `auth-rbac`      | E1-T3 — **solo subpath**, server-only |
+| `createSede`                           | `multi-location` | E1-T4 — raíz y subpath                |
+| `getSede`                              | `multi-location` | E1-T4 — raíz y subpath                |
+| `listSedes`                            | `multi-location` | E1-T4 — raíz y subpath                |
+| `updateSede`                           | `multi-location` | E1-T4 — raíz y subpath                |
+| `deleteSede`                           | `multi-location` | E1-T4 — raíz y subpath                |
+| `SedeDeletionConflictError`            | `multi-location` | E1-T4 — raíz y subpath                |
 
 ## Exports de tipo
 
-| Export          | Módulo          | Desde                  |
-| --------------- | --------------- | ---------------------- |
-| `ButtonVariant` | `design-system` | E1-T2 — raíz y subpath |
-| `Role`          | `auth-rbac`     | E1-T3 — raíz y subpath |
-| `SessionUser`   | `auth-rbac`     | E1-T3 — raíz y subpath |
+| Export             | Módulo           | Desde                  |
+| ------------------ | ---------------- | ---------------------- |
+| `ButtonVariant`    | `design-system`  | E1-T2 — raíz y subpath |
+| `Role`             | `auth-rbac`      | E1-T3 — raíz y subpath |
+| `SessionUser`      | `auth-rbac`      | E1-T3 — raíz y subpath |
+| `Sede`             | `multi-location` | E1-T4 — raíz y subpath |
+| `CreateSedeInput`  | `multi-location` | E1-T4 — raíz y subpath |
+| `UpdateSedeInput`  | `multi-location` | E1-T4 — raíz y subpath |
+| `SedeChildBlocker` | `multi-location` | E1-T4 — raíz y subpath |
