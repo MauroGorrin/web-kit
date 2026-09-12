@@ -229,6 +229,9 @@ importers:
       firebase:
         specifier: ^12.19.0
         version: 12.19.0
+      firebase-admin:
+        specifier: ^14.4.0
+        version: 14.4.0(@firebase/app-compat@0.5.18)(@firebase/app@0.16.2)(supports-color@7.2.0)
       next:
         specifier: 15.5.9
         version: 15.5.9(@opentelemetry/api@1.9.1)(@playwright/test@1.63.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
