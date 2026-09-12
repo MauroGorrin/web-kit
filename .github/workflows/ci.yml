@@ -4,6 +4,24 @@ on:
   push:
   pull_request:
 
+env:
+  # Valores de prueba para el emulador de Firebase — NUNCA secretos reales.
+  # CI corre siempre contra el emulador, nunca contra Firebase/Stripe/Resend
+  # reales; ver .env.example para la lista completa de variables.
+  CI: true
+  FIRESTORE_EMULATOR_HOST: 127.0.0.1:8080
+  FIREBASE_AUTH_EMULATOR_HOST: 127.0.0.1:9099
+  FIREBASE_ADMIN_PROJECT_ID: web-kit-test
+  NEXT_PUBLIC_FIREBASE_API_KEY: demo-api-key
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: web-kit-test.firebaseapp.com
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID: web-kit-test
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: web-kit-test.appspot.com
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "000000000000"
+  NEXT_PUBLIC_FIREBASE_APP_ID: "1:000000000000:web:0000000000000000000000"
+  RESEND_API_KEY: re_test_fake
+  STRIPE_SECRET_KEY: sk_test_fake
+  STRIPE_WEBHOOK_SECRET: whsec_fake
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -32,6 +50,7 @@ jobs:
 
       - run: pnpm build
 
-      - run: pnpm test:e2e
-        env:
-          CI: true
+      # `apps/template/e2e/tienda.spec.ts` siembra Sede/Producto vía SDK admin
+      # antes de correr — necesita el emulador arriba durante todo el paso,
+      # no solo durante el build.
+      - run: pnpm exec firebase emulators:exec --only firestore,auth "pnpm test:e2e"
