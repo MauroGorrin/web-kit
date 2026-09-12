@@ -481,7 +481,7 @@
       "scripts/setup.js",
       "scripts/setup.test.ts"
     ],
-    "status": "in_progress"
+    "status": "done"
   },
   {
     "id": "E3-T5",
@@ -509,6 +509,6 @@
       "docs/modules/*.md",
       "docs/check-docs.ts"
     ],
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
