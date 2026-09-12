@@ -29,7 +29,7 @@
       "apps/template/package.json",
       "apps/template/src/app/**"
     ],
-    "status": "in_progress"
+    "status": "done"
   },
   {
     "id": "E1-T2",
