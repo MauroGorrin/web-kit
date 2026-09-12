@@ -24,6 +24,7 @@ export default defineConfig({
       "apps/template/src/**/*.test.{ts,tsx}",
       "apps/template/*.test.{ts,tsx}",
       "scripts/**/*.test.{ts,tsx}",
+      "tests/rules/**/*.test.{ts,tsx}",
     ],
     exclude: ["node_modules", "dist", ".next", "blueprints/**"],
     coverage: {
