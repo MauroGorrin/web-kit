@@ -241,6 +241,9 @@ importers:
       firebase-admin:
         specifier: ^14.4.0
         version: 14.4.0(@firebase/app-compat@0.5.18)(@firebase/app@0.16.2)(supports-color@7.2.0)
+      lucide-react:
+        specifier: ^1.45.0
+        version: 1.45.0(react@19.1.0)
       next:
         specifier: ^15.5.25
         version: 15.5.25(@opentelemetry/api@1.9.1)(@playwright/test@1.63.0)(@types/node@20.19.43)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -10939,6 +10942,10 @@ snapshots:
       lru-cache: 11.5.2
 
   lsofi@2.0.0: {}
+
+  lucide-react@1.45.0(react@19.1.0):
+    dependencies:
+      react: 19.1.0
 
   lucide-react@1.45.0(react@19.3.0):
     dependencies:
