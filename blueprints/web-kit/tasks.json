@@ -430,7 +430,7 @@
       ".github/workflows/ci.yml",
       "apps/template/e2e/ci-smoke.spec.ts"
     ],
-    "status": "in_progress"
+    "status": "done"
   },
   {
     "id": "E3-T3",
@@ -456,7 +456,7 @@
       ".github/workflows/release.yml",
       ".changeset/config.json"
     ],
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "id": "E3-T4",
