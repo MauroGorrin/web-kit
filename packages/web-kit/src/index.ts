@@ -74,3 +74,6 @@ export {
   MissingStripeSecretKeyError,
   MissingStripeWebhookSecretError,
 } from "./payments/stripe-credentials.ts";
+// ecommerce no tiene efectos secundarios al importar — seguro de reexportar
+// completo.
+export * from "./ecommerce/index.ts";

@@ -66,6 +66,14 @@
 | `MissingStripeWebhookSecretError`      | `payments`       | E2-T5 — raíz y subpath                |
 | `StripeProvider`                       | `payments`       | E2-T5 — **solo subpath**, server-only |
 | `recordCheckoutSessionCompleted`       | `payments`       | E2-T5 — **solo subpath**, server-only |
+| `createProducto`                       | `ecommerce`      | E2-T6 — raíz y subpath                |
+| `deleteProducto`                       | `ecommerce`      | E2-T6 — raíz y subpath                |
+| `listProductosBySede`                  | `ecommerce`      | E2-T6 — raíz y subpath                |
+| `updateProducto`                       | `ecommerce`      | E2-T6 — raíz y subpath                |
+| `CartProvider`                         | `ecommerce`      | E2-T6 — raíz y subpath                |
+| `useCart`                              | `ecommerce`      | E2-T6 — raíz y subpath                |
+| `ProductGrid`                          | `ecommerce`      | E2-T6 — raíz y subpath                |
+| `CartSummary`                          | `ecommerce`      | E2-T6 — raíz y subpath                |
 
 ## Exports de tipo
 
@@ -114,3 +122,12 @@
 | `CheckoutSession`            | `payments`       | E2-T5 — raíz y subpath   |
 | `CreateCheckoutSessionInput` | `payments`       | E2-T5 — raíz y subpath   |
 | `PaymentProvider`            | `payments`       | E2-T5 — raíz y subpath   |
+| `Producto`                   | `ecommerce`      | E2-T6 — raíz y subpath   |
+| `CreateProductoInput`        | `ecommerce`      | E2-T6 — raíz y subpath   |
+| `UpdateProductoInput`        | `ecommerce`      | E2-T6 — raíz y subpath   |
+| `Pedido`                     | `ecommerce`      | E2-T6 — raíz y subpath   |
+| `PedidoItem`                 | `ecommerce`      | E2-T6 — raíz y subpath   |
+| `PedidoStatus`               | `ecommerce`      | E2-T6 — raíz y subpath   |
+| `CartContextValue`           | `ecommerce`      | E2-T6 — raíz y subpath   |
+| `CartItem`                   | `ecommerce`      | E2-T6 — raíz y subpath   |
+| `ProductGridProps`           | `ecommerce`      | E2-T6 — raíz y subpath   |
