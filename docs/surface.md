@@ -62,47 +62,55 @@
 | `buildMetadata`                        | `seo-analytics`  | E2-T4 — raíz y subpath                |
 | `buildLocalBusinessJsonLd`             | `seo-analytics`  | E2-T4 — raíz y subpath                |
 | `Ga4Script`                            | `seo-analytics`  | E2-T4 — raíz y subpath                |
+| `MissingStripeSecretKeyError`          | `payments`       | E2-T5 — raíz y subpath                |
+| `MissingStripeWebhookSecretError`      | `payments`       | E2-T5 — raíz y subpath                |
+| `StripeProvider`                       | `payments`       | E2-T5 — **solo subpath**, server-only |
+| `recordCheckoutSessionCompleted`       | `payments`       | E2-T5 — **solo subpath**, server-only |
 
 ## Exports de tipo
 
-| Export                      | Módulo           | Desde                    |
-| --------------------------- | ---------------- | ------------------------ |
-| `ButtonVariant`             | `design-system`  | E1-T2 — raíz y subpath   |
-| `Role`                      | `auth-rbac`      | E1-T3 — raíz y subpath   |
-| `SessionUser`               | `auth-rbac`      | E1-T3 — raíz y subpath   |
-| `Sede`                      | `multi-location` | E1-T4 — raíz y subpath   |
-| `CreateSedeInput`           | `multi-location` | E1-T4 — raíz y subpath   |
-| `UpdateSedeInput`           | `multi-location` | E1-T4 — raíz y subpath   |
-| `SedeChildBlocker`          | `multi-location` | E1-T4 — raíz y subpath   |
-| `Cita`                      | `scheduling`     | E1-T5 — raíz y subpath   |
-| `CitaStatus`                | `scheduling`     | E1-T5 — raíz y subpath   |
-| `CitaSource`                | `scheduling`     | E1-T5 — raíz y subpath   |
-| `CreateCitaInput`           | `scheduling`     | E1-T5 — raíz y subpath   |
-| `UpdateCitaInput`           | `scheduling`     | E1-T5 — raíz y subpath   |
-| `CalendlyEmbedProps`        | `scheduling`     | E1-T5 — raíz y subpath   |
-| `NextAppointmentCardProps`  | `client-portal`  | E1-T6 — raíz y subpath   |
-| `NotificationListProps`     | `client-portal`  | E1-T6 — raíz y subpath   |
-| `PortalNotification`        | `client-portal`  | E1-T6 — raíz y subpath   |
-| `Especialista`              | `admin-panel`    | E2-T1 — raíz y subpath   |
-| `CreateEspecialistaInput`   | `admin-panel`    | E2-T1 — raíz y subpath   |
-| `UpdateEspecialistaInput`   | `admin-panel`    | E2-T1 — raíz y subpath   |
-| `DashboardProps`            | `admin-panel`    | E2-T1 — raíz y subpath   |
-| `CitasTableProps`           | `admin-panel`    | E2-T1 — raíz y subpath   |
-| `EspecialistasCrudProps`    | `admin-panel`    | E2-T1 — raíz y subpath   |
-| `SedesCrudProps`            | `admin-panel`    | E2-T1 — raíz y subpath   |
-| `CrmAdapter`                | `crm`            | E2-T2 — raíz y subpath   |
-| `Lead`                      | `crm`            | E2-T2 — raíz y subpath   |
-| `LeadInteraction`           | `crm`            | E2-T2 — raíz y subpath   |
-| `LeadStatus`                | `crm`            | E2-T2 — raíz y subpath   |
-| `CreateLeadInput`           | `crm`            | E2-T2 — raíz y subpath   |
-| `CreateOrUpdateLeadOptions` | `crm`            | E2-T2 — **solo subpath** |
-| `AppointmentEmailTemplate`  | `notifications`  | E2-T3 — raíz y subpath   |
-| `AppointmentEmailData`      | `notifications`  | E2-T3 — raíz y subpath   |
-| `RenderedEmail`             | `notifications`  | E2-T3 — raíz y subpath   |
-| `SendAppointmentEmailInput` | `notifications`  | E2-T3 — **solo subpath** |
-| `MissingPageMetadataError`  | `seo-analytics`  | E2-T4 — raíz y subpath   |
-| `PageMetadata`              | `seo-analytics`  | E2-T4 — raíz y subpath   |
-| `PageMetadataInput`         | `seo-analytics`  | E2-T4 — raíz y subpath   |
-| `LocalBusinessData`         | `seo-analytics`  | E2-T4 — raíz y subpath   |
-| `LocalBusinessJsonLd`       | `seo-analytics`  | E2-T4 — raíz y subpath   |
-| `Ga4ScriptProps`            | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| Export                       | Módulo           | Desde                    |
+| ---------------------------- | ---------------- | ------------------------ |
+| `ButtonVariant`              | `design-system`  | E1-T2 — raíz y subpath   |
+| `Role`                       | `auth-rbac`      | E1-T3 — raíz y subpath   |
+| `SessionUser`                | `auth-rbac`      | E1-T3 — raíz y subpath   |
+| `Sede`                       | `multi-location` | E1-T4 — raíz y subpath   |
+| `CreateSedeInput`            | `multi-location` | E1-T4 — raíz y subpath   |
+| `UpdateSedeInput`            | `multi-location` | E1-T4 — raíz y subpath   |
+| `SedeChildBlocker`           | `multi-location` | E1-T4 — raíz y subpath   |
+| `Cita`                       | `scheduling`     | E1-T5 — raíz y subpath   |
+| `CitaStatus`                 | `scheduling`     | E1-T5 — raíz y subpath   |
+| `CitaSource`                 | `scheduling`     | E1-T5 — raíz y subpath   |
+| `CreateCitaInput`            | `scheduling`     | E1-T5 — raíz y subpath   |
+| `UpdateCitaInput`            | `scheduling`     | E1-T5 — raíz y subpath   |
+| `CalendlyEmbedProps`         | `scheduling`     | E1-T5 — raíz y subpath   |
+| `NextAppointmentCardProps`   | `client-portal`  | E1-T6 — raíz y subpath   |
+| `NotificationListProps`      | `client-portal`  | E1-T6 — raíz y subpath   |
+| `PortalNotification`         | `client-portal`  | E1-T6 — raíz y subpath   |
+| `Especialista`               | `admin-panel`    | E2-T1 — raíz y subpath   |
+| `CreateEspecialistaInput`    | `admin-panel`    | E2-T1 — raíz y subpath   |
+| `UpdateEspecialistaInput`    | `admin-panel`    | E2-T1 — raíz y subpath   |
+| `DashboardProps`             | `admin-panel`    | E2-T1 — raíz y subpath   |
+| `CitasTableProps`            | `admin-panel`    | E2-T1 — raíz y subpath   |
+| `EspecialistasCrudProps`     | `admin-panel`    | E2-T1 — raíz y subpath   |
+| `SedesCrudProps`             | `admin-panel`    | E2-T1 — raíz y subpath   |
+| `CrmAdapter`                 | `crm`            | E2-T2 — raíz y subpath   |
+| `Lead`                       | `crm`            | E2-T2 — raíz y subpath   |
+| `LeadInteraction`            | `crm`            | E2-T2 — raíz y subpath   |
+| `LeadStatus`                 | `crm`            | E2-T2 — raíz y subpath   |
+| `CreateLeadInput`            | `crm`            | E2-T2 — raíz y subpath   |
+| `CreateOrUpdateLeadOptions`  | `crm`            | E2-T2 — **solo subpath** |
+| `AppointmentEmailTemplate`   | `notifications`  | E2-T3 — raíz y subpath   |
+| `AppointmentEmailData`       | `notifications`  | E2-T3 — raíz y subpath   |
+| `RenderedEmail`              | `notifications`  | E2-T3 — raíz y subpath   |
+| `SendAppointmentEmailInput`  | `notifications`  | E2-T3 — **solo subpath** |
+| `MissingPageMetadataError`   | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| `PageMetadata`               | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| `PageMetadataInput`          | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| `LocalBusinessData`          | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| `LocalBusinessJsonLd`        | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| `Ga4ScriptProps`             | `seo-analytics`  | E2-T4 — raíz y subpath   |
+| `CheckoutLineItem`           | `payments`       | E2-T5 — raíz y subpath   |
+| `CheckoutSession`            | `payments`       | E2-T5 — raíz y subpath   |
+| `CreateCheckoutSessionInput` | `payments`       | E2-T5 — raíz y subpath   |
+| `PaymentProvider`            | `payments`       | E2-T5 — raíz y subpath   |

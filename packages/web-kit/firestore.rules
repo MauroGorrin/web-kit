@@ -65,6 +65,15 @@ service cloud.firestore {
       allow update, delete: if isAdminOrAbove();
     }
 
+    // --- stripe_webhook_events (payments, paso 11) ---
+    // Marcador de idempotencia por `event.id` de Stripe — solo lo toca el
+    // webhook vía SDK admin (bypassa estas reglas). Nunca leído/escrito
+    // desde un cliente; entrada explícita por claridad aunque el catch-all
+    // de abajo ya lo cubriría.
+    match /stripe_webhook_events/{eventId} {
+      allow read, write: if false;
+    }
+
     // Denegación por defecto para cualquier otra colección.
     match /{document=**} {
       allow read, write: if false;

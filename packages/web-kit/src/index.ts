@@ -60,3 +60,17 @@ export { MissingResendApiKeyError } from "./notifications/resend-credentials.ts"
 // seo-analytics no tiene efectos secundarios al importar — seguro de
 // reexportar completo.
 export * from "./seo-analytics/index.ts";
+// payments: `stripe-provider.ts`/`repository.server.ts` importan
+// "server-only" y sostienen STRIPE_SECRET_KEY/STRIPE_WEBHOOK_SECRET. Solo
+// tipos y clases de error en la raíz; `StripeProvider` y
+// `recordCheckoutSessionCompleted` solo en el subpath `@mgorrin/web-kit/payments`.
+export type {
+  CheckoutLineItem,
+  CheckoutSession,
+  CreateCheckoutSessionInput,
+  PaymentProvider,
+} from "./payments/types.ts";
+export {
+  MissingStripeSecretKeyError,
+  MissingStripeWebhookSecretError,
+} from "./payments/stripe-credentials.ts";
