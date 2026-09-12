@@ -334,7 +334,7 @@
       "apps/template/src/app/api/webhooks/stripe/route.test.ts",
       "packages/web-kit/src/index.ts"
     ],
-    "status": "in_progress"
+    "status": "done"
   },
   {
     "id": "E2-T6",
@@ -364,7 +364,7 @@
       "apps/template/e2e/tienda.spec.ts",
       "packages/web-kit/src/index.ts"
     ],
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "id": "E3-T1",
