@@ -9,12 +9,15 @@ export interface ThemeConfig {
   colorBorder: string;
 }
 
+// Tema del cliente de ejemplo: Vitalis Capilar (clínica de injerto capilar).
+// Navy profundo + dorado — paleta típica de clínicas estéticas premium
+// (confianza médica + sensación de resultado de alta gama).
 export const theme: ThemeConfig = {
-  colorPrimary: "#0F172A",
-  colorAccent: "#2563EB",
+  colorPrimary: "#0E2A3D",
+  colorAccent: "#C9972B",
   colorBackground: "#FFFFFF",
-  colorSurface: "#F8FAFC",
-  colorBorder: "#E2E8F0",
+  colorSurface: "#F7F5F1",
+  colorBorder: "#E7E1D4",
 };
 
 // Serializado a un <style> en el root layout — así el override llega antes del

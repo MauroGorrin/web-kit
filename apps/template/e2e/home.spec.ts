@@ -14,7 +14,7 @@ test("la home renderiza un Button estilizado con --color-primary de theme.config
 }) => {
   await page.goto("/");
 
-  const button = page.getByRole("button", { name: "Empezar" });
+  const button = page.getByRole("button", { name: "Reservar consulta" });
   await expect(button).toBeVisible();
 
   // El componente nunca hardcodea el hex — lee var(--color-primary), cuyo

@@ -10,7 +10,9 @@ export default async function AdminPage() {
 
   return (
     <main className="flex min-h-screen flex-col gap-6 p-8">
-      <h1 className="text-2xl font-semibold">Admin</h1>
+      <h1 className="text-2xl font-semibold text-[var(--color-primary)]">
+        Panel de administración — Vitalis Capilar
+      </h1>
       <Dashboard citasProximos7Dias={citas} />
     </main>
   );

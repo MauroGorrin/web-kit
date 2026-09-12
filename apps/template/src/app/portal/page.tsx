@@ -19,8 +19,8 @@ export default async function PortalPage() {
   const [nextCita] = await listUpcomingCitasForClient(session.uid, { limit: 1 });
 
   return (
-    <main className="flex min-h-screen flex-col gap-6 p-8">
-      <h1 className="text-2xl font-semibold">Tu portal</h1>
+    <main className="mx-auto flex min-h-screen max-w-3xl flex-col gap-6 p-8">
+      <h1 className="text-2xl font-semibold text-[var(--color-primary)]">Portal del paciente</h1>
       <NextAppointmentCard cita={nextCita ?? null} />
       <NotificationList notifications={[]} />
     </main>
