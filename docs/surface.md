@@ -40,6 +40,15 @@
 | `listUpcomingCitasForClient`           | `scheduling`     | E1-T6 — raíz y subpath                |
 | `NextAppointmentCard`                  | `client-portal`  | E1-T6 — raíz y subpath                |
 | `NotificationList`                     | `client-portal`  | E1-T6 — raíz y subpath                |
+| `listCitasBetween`                     | `scheduling`     | E2-T1 — raíz y subpath                |
+| `createEspecialista`                   | `admin-panel`    | E2-T1 — raíz y subpath                |
+| `deleteEspecialista`                   | `admin-panel`    | E2-T1 — raíz y subpath                |
+| `listEspecialistas`                    | `admin-panel`    | E2-T1 — raíz y subpath                |
+| `updateEspecialista`                   | `admin-panel`    | E2-T1 — raíz y subpath                |
+| `Dashboard`                            | `admin-panel`    | E2-T1 — raíz y subpath                |
+| `CitasTable`                           | `admin-panel`    | E2-T1 — raíz y subpath                |
+| `EspecialistasCrud`                    | `admin-panel`    | E2-T1 — raíz y subpath                |
+| `SedesCrud`                            | `admin-panel`    | E2-T1 — raíz y subpath                |
 
 ## Exports de tipo
 
@@ -61,3 +70,10 @@
 | `NextAppointmentCardProps` | `client-portal`  | E1-T6 — raíz y subpath |
 | `NotificationListProps`    | `client-portal`  | E1-T6 — raíz y subpath |
 | `PortalNotification`       | `client-portal`  | E1-T6 — raíz y subpath |
+| `Especialista`             | `admin-panel`    | E2-T1 — raíz y subpath |
+| `CreateEspecialistaInput`  | `admin-panel`    | E2-T1 — raíz y subpath |
+| `UpdateEspecialistaInput`  | `admin-panel`    | E2-T1 — raíz y subpath |
+| `DashboardProps`           | `admin-panel`    | E2-T1 — raíz y subpath |
+| `CitasTableProps`          | `admin-panel`    | E2-T1 — raíz y subpath |
+| `EspecialistasCrudProps`   | `admin-panel`    | E2-T1 — raíz y subpath |
+| `SedesCrudProps`           | `admin-panel`    | E2-T1 — raíz y subpath |

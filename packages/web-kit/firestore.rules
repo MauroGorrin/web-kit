@@ -35,6 +35,12 @@ service cloud.firestore {
       allow write: if isAdminOrAbove();
     }
 
+    // --- especialistas (admin-panel, paso 7) ---
+    match /especialistas/{especialistaId} {
+      allow read: if true;
+      allow write: if isAdminOrAbove();
+    }
+
     // --- citas (scheduling, paso 5) ---
     match /citas/{citaId} {
       allow read: if isSignedIn();

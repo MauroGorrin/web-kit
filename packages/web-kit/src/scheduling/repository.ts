@@ -93,6 +93,23 @@ export async function listUpcomingCitasForClient(
   return snapshot.docs.map((d) => toCita(d.id, d.data()));
 }
 
+/**
+ * Usada por `admin-panel` (E2-T1) para el dashboard ("citas próximos 7 días")
+ * y el listado de `/admin/citas`. Sin filtro por `sedeId` a propósito — el
+ * dashboard cuenta todas las sedes; ver mismo comentario de índice en
+ * `listUpcomingCitasForClient`.
+ */
+export async function listCitasBetween(start: Date, end: Date): Promise<Cita[]> {
+  const constraints: QueryConstraint[] = [
+    where("datetime", ">=", Timestamp.fromDate(start)),
+    where("datetime", "<=", Timestamp.fromDate(end)),
+    orderBy("datetime", "asc"),
+  ];
+
+  const snapshot = await getDocs(query(collection(getFirebaseDb(), CITAS), ...constraints));
+  return snapshot.docs.map((d) => toCita(d.id, d.data()));
+}
+
 export async function updateCita(id: string, patch: UpdateCitaInput): Promise<void> {
   // Firestore rechaza `undefined` como valor de campo — un patch parcial
   // desde el borde (Route Handler) trae claves ausentes como `undefined`,

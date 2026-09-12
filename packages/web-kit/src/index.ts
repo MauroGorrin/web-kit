@@ -15,8 +15,9 @@ export * from "./design-system/index.ts";
 export type { Role, SessionUser } from "./auth-rbac/types.ts";
 export { hasRequiredRole, useRoleGuard } from "./auth-rbac/use-role-guard.ts";
 export { getFirebaseAuth, getFirebaseDb } from "./auth-rbac/firebase-client.ts";
-// multi-location, scheduling y client-portal no tienen efectos secundarios al
-// importar — seguro de reexportar completo.
+// multi-location, scheduling, client-portal y admin-panel no tienen efectos
+// secundarios al importar — seguro de reexportar completo.
 export * from "./multi-location/index.ts";
 export * from "./scheduling/index.ts";
 export * from "./client-portal/index.ts";
+export * from "./admin-panel/index.ts";
