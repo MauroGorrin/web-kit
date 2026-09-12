@@ -15,9 +15,35 @@ export * from "./design-system/index.ts";
 export type { Role, SessionUser } from "./auth-rbac/types.ts";
 export { hasRequiredRole, useRoleGuard } from "./auth-rbac/use-role-guard.ts";
 export { getFirebaseAuth, getFirebaseDb } from "./auth-rbac/firebase-client.ts";
-// multi-location, scheduling, client-portal y admin-panel no tienen efectos
-// secundarios al importar — seguro de reexportar completo.
+// multi-location, client-portal y admin-panel no tienen efectos secundarios
+// al importar (sus repositorios usan el SDK cliente desde componentes
+// `"use client"`, o leen colecciones públicas) — seguro de reexportar
+// completo.
 export * from "./multi-location/index.ts";
-export * from "./scheduling/index.ts";
 export * from "./client-portal/index.ts";
 export * from "./admin-panel/index.ts";
+// scheduling: su repositorio (`repository.server.ts`) usa el SDK admin —
+// TODOS sus llamadores son Route Handlers/Server Components, así que
+// `getCita`/`createCita`/`listCitasBetween`/`listUpcomingCitasForClient`/
+// `updateCita` viven únicamente en el subpath `@mgorrin/web-kit/scheduling`.
+// Solo los tipos y `CalendlyEmbed` (client-safe) van en el barrel raíz.
+export type {
+  Cita,
+  CitaSource,
+  CitaStatus,
+  CreateCitaInput,
+  UpdateCitaInput,
+} from "./scheduling/types.ts";
+export { CalendlyEmbed, type CalendlyEmbedProps } from "./scheduling/CalendlyEmbed.tsx";
+// crm: igual que auth-rbac — `repository.ts`/`hubspot-adapter.ts` importan
+// "server-only" (sostienen HUBSPOT_API_KEY). Solo lo puramente de datos
+// (types/errors) es seguro en el barrel raíz; el resto vive únicamente en el
+// subpath `@mgorrin/web-kit/crm`.
+export type {
+  CreateLeadInput,
+  CrmAdapter,
+  Lead,
+  LeadInteraction,
+  LeadStatus,
+} from "./crm/types.ts";
+export { UnmappedLeadStatusError } from "./crm/errors.ts";

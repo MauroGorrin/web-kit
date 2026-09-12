@@ -1,4 +1,5 @@
-import { Dashboard, listCitasBetween } from "@mgorrin/web-kit";
+import { Dashboard } from "@mgorrin/web-kit";
+import { listCitasBetween } from "@mgorrin/web-kit/scheduling";
 
 export const dynamic = "force-dynamic";
 

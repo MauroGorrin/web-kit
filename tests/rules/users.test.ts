@@ -8,7 +8,12 @@ import {
 } from "@firebase/rules-unit-testing";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
-const PROJECT_ID = process.env.FIREBASE_ADMIN_PROJECT_ID ?? "web-kit-test";
+// Sufijo por archivo — cada test file de esta carpeta corre en su propio
+// "proyecto" del emulador, así `clearFirestore()` de uno nunca pisa los
+// datos de otro cuando vitest los corre en paralelo (confirmado por
+// ejecución real: `vitest run tests/rules` completo fallaba intermitente
+// sin esto).
+const PROJECT_ID = `${process.env.FIREBASE_ADMIN_PROJECT_ID ?? "web-kit-test"}-users`;
 
 let testEnv: RulesTestEnvironment;
 

@@ -1,22 +1,16 @@
-// Único escritor de la colección `citas` — ver `.claude/rules/firestore.md` y
-// CLAUDE.md "Ruta de una cita creada por Calendly". Usa el SDK cliente; la
-// autorización real la hace `firestore.rules`.
-import {
-  Timestamp,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  limit as fsLimit,
-  orderBy,
-  query,
-  serverTimestamp,
-  setDoc,
-  updateDoc,
-  where,
-  type QueryConstraint,
-} from "firebase/firestore";
-import { getFirebaseDb } from "../auth-rbac/firebase-client.ts";
+// Único escritor/lector server-side de la colección `citas` — ver
+// `.claude/rules/firestore.md`. Usa el SDK admin (bypassa `firestore.rules`)
+// porque TODOS los llamadores de este archivo son Route Handlers/Server
+// Components — el SDK cliente ahí nunca queda autenticado como el usuario
+// del request (no hay traspaso automático de cookie a sesión del SDK), así
+// que las reglas (`isSignedIn()`, `isAdminOrAbove()`) siempre le negarían el
+// paso. La autorización real la hace el caller en código, con
+// `session.role`/`session.uid` ya verificados — ver CLAUDE.md, "Regla de
+// refuerzo". Las reglas de Firestore siguen siendo la barrera real contra
+// escrituras directas desde el navegador (ver `tests/rules/citas.test.ts`).
+import "server-only";
+import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { adminDb } from "../auth-rbac/firebase-admin.server.ts";
 import { normalizeCreateCitaInput } from "./normalize.ts";
 import type { Cita, CreateCitaInput, UpdateCitaInput } from "./types.ts";
 
@@ -42,9 +36,9 @@ function toCita(id: string, data: Record<string, unknown>): Cita {
 }
 
 export async function getCita(id: string): Promise<Cita | null> {
-  const snapshot = await getDoc(doc(getFirebaseDb(), CITAS, id));
-  if (!snapshot.exists()) return null;
-  return toCita(snapshot.id, snapshot.data());
+  const snapshot = await adminDb.collection(CITAS).doc(id).get();
+  if (!snapshot.exists) return null;
+  return toCita(snapshot.id, snapshot.data()!);
 }
 
 /**
@@ -53,20 +47,18 @@ export async function getCita(id: string): Promise<Cita | null> {
  * Ver `apps/template/src/app/api/citas/route.ts`.
  */
 export async function createCita(input: CreateCitaInput): Promise<Cita> {
-  const db = getFirebaseDb();
   const normalized = normalizeCreateCitaInput(input);
-  const ref = doc(collection(db, CITAS));
+  const ref = adminDb.collection(CITAS).doc();
 
-  await setDoc(ref, {
+  await ref.set({
     ...normalized,
-    datetime: normalized.datetime,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
   });
 
   // `serverTimestamp()` es un sentinel — se relee el doc para devolver los
   // Timestamps reales que Firestore resolvió al escribir.
-  const written = await getDoc(ref);
+  const written = await ref.get();
   return toCita(ref.id, written.data()!);
 }
 
@@ -82,31 +74,29 @@ export async function listUpcomingCitasForClient(
   clientUid: string,
   options?: { limit?: number },
 ): Promise<Cita[]> {
-  const constraints: QueryConstraint[] = [
-    where("clientUid", "==", clientUid),
-    where("datetime", ">=", Timestamp.fromDate(new Date())),
-    orderBy("datetime", "asc"),
-  ];
-  if (options?.limit) constraints.push(fsLimit(options.limit));
+  let q = adminDb
+    .collection(CITAS)
+    .where("clientUid", "==", clientUid)
+    .where("datetime", ">=", Timestamp.fromDate(new Date()))
+    .orderBy("datetime", "asc");
+  if (options?.limit) q = q.limit(options.limit);
 
-  const snapshot = await getDocs(query(collection(getFirebaseDb(), CITAS), ...constraints));
+  const snapshot = await q.get();
   return snapshot.docs.map((d) => toCita(d.id, d.data()));
 }
 
 /**
  * Usada por `admin-panel` (E2-T1) para el dashboard ("citas próximos 7 días")
  * y el listado de `/admin/citas`. Sin filtro por `sedeId` a propósito — el
- * dashboard cuenta todas las sedes; ver mismo comentario de índice en
- * `listUpcomingCitasForClient`.
+ * dashboard cuenta todas las sedes; ver mismo comentario de índice arriba.
  */
 export async function listCitasBetween(start: Date, end: Date): Promise<Cita[]> {
-  const constraints: QueryConstraint[] = [
-    where("datetime", ">=", Timestamp.fromDate(start)),
-    where("datetime", "<=", Timestamp.fromDate(end)),
-    orderBy("datetime", "asc"),
-  ];
-
-  const snapshot = await getDocs(query(collection(getFirebaseDb(), CITAS), ...constraints));
+  const snapshot = await adminDb
+    .collection(CITAS)
+    .where("datetime", ">=", Timestamp.fromDate(start))
+    .where("datetime", "<=", Timestamp.fromDate(end))
+    .orderBy("datetime", "asc")
+    .get();
   return snapshot.docs.map((d) => toCita(d.id, d.data()));
 }
 
@@ -116,8 +106,11 @@ export async function updateCita(id: string, patch: UpdateCitaInput): Promise<vo
   // nunca como ausentes de verdad.
   const fields = Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined));
 
-  await updateDoc(doc(getFirebaseDb(), CITAS, id), {
-    ...fields,
-    updatedAt: serverTimestamp(),
-  });
+  await adminDb
+    .collection(CITAS)
+    .doc(id)
+    .update({
+      ...fields,
+      updatedAt: FieldValue.serverTimestamp(),
+    });
 }

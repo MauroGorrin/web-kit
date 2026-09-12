@@ -1,11 +1,8 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getSession } from "@mgorrin/web-kit/auth-rbac";
-import {
-  NextAppointmentCard,
-  NotificationList,
-  listUpcomingCitasForClient,
-} from "@mgorrin/web-kit";
+import { NextAppointmentCard, NotificationList } from "@mgorrin/web-kit";
+import { listUpcomingCitasForClient } from "@mgorrin/web-kit/scheduling";
 
 // Dinámico a propósito — la próxima cita depende de la sesión del request,
 // nunca se puede pre-renderizar estáticamente. Ver blueprint §7.

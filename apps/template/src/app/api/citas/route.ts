@@ -1,7 +1,9 @@
 import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSession } from "@mgorrin/web-kit/auth-rbac";
-import { createCita, getSede } from "@mgorrin/web-kit";
+import { getSede } from "@mgorrin/web-kit";
+import { createCita } from "@mgorrin/web-kit/scheduling";
+import { markLeadScheduledByEmail } from "@mgorrin/web-kit/crm";
 
 interface CreateCitaBody {
   clientUid?: string | null;
@@ -40,6 +42,16 @@ export async function POST(request: NextRequest) {
     source: body.source === "manual" ? "manual" : "calendly",
     notes: typeof body.notes === "string" ? body.notes : "",
   });
+
+  // Efecto secundario, nunca transaccional — si el cliente que agenda tiene
+  // un Lead existente por email, se mueve a "scheduled". Un fallo aquí no
+  // revierte la Cita ya creada. Ver blueprint §8 (relación Lead/Cita) y
+  // acceptance #5 de E2-T2.
+  if (cita.clientUid && session.email) {
+    markLeadScheduledByEmail(session.email).catch((err: unknown) => {
+      console.error("No se pudo actualizar el Lead asociado a la cita:", err);
+    });
+  }
 
   return NextResponse.json({ ok: true, data: cita }, { status: 201 });
 }

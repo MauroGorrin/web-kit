@@ -1,4 +1,5 @@
-import { CitasTable, listCitasBetween, listSedes } from "@mgorrin/web-kit";
+import { CitasTable, listSedes } from "@mgorrin/web-kit";
+import { listCitasBetween } from "@mgorrin/web-kit/scheduling";
 
 export const dynamic = "force-dynamic";
 

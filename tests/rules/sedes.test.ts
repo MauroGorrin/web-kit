@@ -8,7 +8,8 @@ import {
 } from "@firebase/rules-unit-testing";
 import { doc, getDocs, collection, setDoc, deleteDoc } from "firebase/firestore";
 
-const PROJECT_ID = process.env.FIREBASE_ADMIN_PROJECT_ID ?? "web-kit-test";
+// Sufijo por archivo — ver comentario en tests/rules/users.test.ts.
+const PROJECT_ID = `${process.env.FIREBASE_ADMIN_PROJECT_ID ?? "web-kit-test"}-sedes`;
 
 let testEnv: RulesTestEnvironment;
 

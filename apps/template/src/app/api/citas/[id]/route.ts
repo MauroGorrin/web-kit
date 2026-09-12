@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSession } from "@mgorrin/web-kit/auth-rbac";
-import { hasRequiredRole, updateCita, type CitaStatus } from "@mgorrin/web-kit";
+import { hasRequiredRole, type CitaStatus } from "@mgorrin/web-kit";
+import { updateCita } from "@mgorrin/web-kit/scheduling";
 
 interface UpdateCitaBody {
   status?: CitaStatus;
