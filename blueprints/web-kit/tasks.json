@@ -216,7 +216,7 @@
       "apps/template/e2e/admin.spec.ts",
       "packages/web-kit/src/index.ts"
     ],
-    "status": "in_progress"
+    "status": "done"
   },
   {
     "id": "E2-T2",
@@ -243,7 +243,7 @@
       "apps/template/src/app/api/leads/route.ts",
       "packages/web-kit/src/index.ts"
     ],
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "id": "E2-T3",
