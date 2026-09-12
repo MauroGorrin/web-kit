@@ -56,6 +56,9 @@
 | `createOrUpdateLead`                   | `crm`            | E2-T2 — **solo subpath**, server-only |
 | `markLeadScheduledByEmail`             | `crm`            | E2-T2 — **solo subpath**, server-only |
 | `UnmappedLeadStatusError`              | `crm`            | E2-T2 — raíz y subpath                |
+| `renderAppointmentEmail`               | `notifications`  | E2-T3 — raíz y subpath                |
+| `MissingResendApiKeyError`             | `notifications`  | E2-T3 — raíz y subpath                |
+| `sendAppointmentEmail`                 | `notifications`  | E2-T3 — **solo subpath**, server-only |
 
 ## Exports de tipo
 
@@ -90,3 +93,7 @@
 | `LeadStatus`                | `crm`            | E2-T2 — raíz y subpath   |
 | `CreateLeadInput`           | `crm`            | E2-T2 — raíz y subpath   |
 | `CreateOrUpdateLeadOptions` | `crm`            | E2-T2 — **solo subpath** |
+| `AppointmentEmailTemplate`  | `notifications`  | E2-T3 — raíz y subpath   |
+| `AppointmentEmailData`      | `notifications`  | E2-T3 — raíz y subpath   |
+| `RenderedEmail`             | `notifications`  | E2-T3 — raíz y subpath   |
+| `SendAppointmentEmailInput` | `notifications`  | E2-T3 — **solo subpath** |

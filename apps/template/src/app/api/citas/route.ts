@@ -4,6 +4,11 @@ import { getSession } from "@mgorrin/web-kit/auth-rbac";
 import { getSede } from "@mgorrin/web-kit";
 import { createCita } from "@mgorrin/web-kit/scheduling";
 import { markLeadScheduledByEmail } from "@mgorrin/web-kit/crm";
+import { sendAppointmentEmail } from "@mgorrin/web-kit/notifications";
+
+function looksLikeEmail(value: string): boolean {
+  return value.includes("@");
+}
 
 interface CreateCitaBody {
   clientUid?: string | null;
@@ -52,6 +57,24 @@ export async function POST(request: NextRequest) {
       console.error("No se pudo actualizar el Lead asociado a la cita:", err);
     });
   }
+
+  // Efecto secundario, nunca transaccional — dirigido al cliente (si agendó
+  // con su propia cuenta) y al admin de la Sede (`sede.contact`, cuando
+  // parece un email). Ver acceptance #1 de E2-T3.
+  const recipients = [
+    cita.clientUid && session.email ? session.email : null,
+    looksLikeEmail(sede.contact) ? sede.contact : null,
+  ].filter((email): email is string => Boolean(email));
+
+  sendAppointmentEmail({
+    template: "confirmada",
+    to: recipients,
+    clienteName: session.displayName,
+    sedeName: sede.name,
+    datetime: cita.datetime,
+  }).catch((err: unknown) => {
+    console.error("Fallo enviando el email de confirmación de la cita:", err);
+  });
 
   return NextResponse.json({ ok: true, data: cita }, { status: 201 });
 }

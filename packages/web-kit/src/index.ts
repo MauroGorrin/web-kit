@@ -47,3 +47,13 @@ export type {
   LeadStatus,
 } from "./crm/types.ts";
 export { UnmappedLeadStatusError } from "./crm/errors.ts";
+// notifications: `send-appointment-email.ts` importa "server-only" (sostiene
+// RESEND_API_KEY vía resend-client.ts). `templates.ts` es puro — seguro en
+// el barrel raíz; `sendAppointmentEmail` solo en el subpath.
+export type {
+  AppointmentEmailData,
+  AppointmentEmailTemplate,
+  RenderedEmail,
+} from "./notifications/templates.ts";
+export { renderAppointmentEmail } from "./notifications/templates.ts";
+export { MissingResendApiKeyError } from "./notifications/resend-credentials.ts";

@@ -271,7 +271,7 @@
       "apps/template/src/app/api/citas/[id]/route.ts",
       "packages/web-kit/src/index.ts"
     ],
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "id": "E2-T4",
