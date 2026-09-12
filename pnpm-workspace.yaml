@@ -16,6 +16,10 @@ allowBuilds:
   protobufjs: true
   unrs-resolver: true
   sharp: true
+  # Dependencia opcional nativa de firebase-tools (emulator hub) — mismo
+  # bloqueo ERR_PNPM_IGNORED_BUILDS, confirmado durante el primer deploy a
+  # Vercel (build en Linux, nunca aparece en dev local en Windows).
+  re2: true
 minimumReleaseAgeExclude:
   - lucide-react@1.45.0
   - resend@6.28.0

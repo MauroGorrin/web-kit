@@ -31,6 +31,9 @@ id_ed25519
 credentials.json
 service-account*.json
 
+# Vercel CLI (link local del proyecto — no se commitea)
+.vercel/
+
 # Editor / OS
 .DS_Store
 .vscode/*
