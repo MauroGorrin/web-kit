@@ -6,9 +6,15 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
+  limit as fsLimit,
+  orderBy,
+  query,
   serverTimestamp,
   setDoc,
   updateDoc,
+  where,
+  type QueryConstraint,
 } from "firebase/firestore";
 import { getFirebaseDb } from "../auth-rbac/firebase-client.ts";
 import { normalizeCreateCitaInput } from "./normalize.ts";
@@ -62,6 +68,29 @@ export async function createCita(input: CreateCitaInput): Promise<Cita> {
   // Timestamps reales que Firestore resolvió al escribir.
   const written = await getDoc(ref);
   return toCita(ref.id, written.data()!);
+}
+
+/**
+ * Usada por `client-portal` (E1-T6) para el "próxima cita" de `/portal`.
+ * Requiere un índice compuesto (`clientUid` == , `datetime` >=, orderBy
+ * `datetime`) en Firestore real — `packages/web-kit/firestore.indexes.json`
+ * es de §19.6, fuera del alcance de archivos de las tareas que tocan este
+ * archivo; Firestore señala el índice faltante con un link directo a la
+ * consola si hace falta antes de que alguien lo declare.
+ */
+export async function listUpcomingCitasForClient(
+  clientUid: string,
+  options?: { limit?: number },
+): Promise<Cita[]> {
+  const constraints: QueryConstraint[] = [
+    where("clientUid", "==", clientUid),
+    where("datetime", ">=", Timestamp.fromDate(new Date())),
+    orderBy("datetime", "asc"),
+  ];
+  if (options?.limit) constraints.push(fsLimit(options.limit));
+
+  const snapshot = await getDocs(query(collection(getFirebaseDb(), CITAS), ...constraints));
+  return snapshot.docs.map((d) => toCita(d.id, d.data()));
 }
 
 export async function updateCita(id: string, patch: UpdateCitaInput): Promise<void> {

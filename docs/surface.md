@@ -37,21 +37,27 @@
 | `getCita`                              | `scheduling`     | E1-T5 — raíz y subpath                |
 | `updateCita`                           | `scheduling`     | E1-T5 — raíz y subpath                |
 | `CalendlyEmbed`                        | `scheduling`     | E1-T5 — raíz y subpath                |
+| `listUpcomingCitasForClient`           | `scheduling`     | E1-T6 — raíz y subpath                |
+| `NextAppointmentCard`                  | `client-portal`  | E1-T6 — raíz y subpath                |
+| `NotificationList`                     | `client-portal`  | E1-T6 — raíz y subpath                |
 
 ## Exports de tipo
 
-| Export               | Módulo           | Desde                  |
-| -------------------- | ---------------- | ---------------------- |
-| `ButtonVariant`      | `design-system`  | E1-T2 — raíz y subpath |
-| `Role`               | `auth-rbac`      | E1-T3 — raíz y subpath |
-| `SessionUser`        | `auth-rbac`      | E1-T3 — raíz y subpath |
-| `Sede`               | `multi-location` | E1-T4 — raíz y subpath |
-| `CreateSedeInput`    | `multi-location` | E1-T4 — raíz y subpath |
-| `UpdateSedeInput`    | `multi-location` | E1-T4 — raíz y subpath |
-| `SedeChildBlocker`   | `multi-location` | E1-T4 — raíz y subpath |
-| `Cita`               | `scheduling`     | E1-T5 — raíz y subpath |
-| `CitaStatus`         | `scheduling`     | E1-T5 — raíz y subpath |
-| `CitaSource`         | `scheduling`     | E1-T5 — raíz y subpath |
-| `CreateCitaInput`    | `scheduling`     | E1-T5 — raíz y subpath |
-| `UpdateCitaInput`    | `scheduling`     | E1-T5 — raíz y subpath |
-| `CalendlyEmbedProps` | `scheduling`     | E1-T5 — raíz y subpath |
+| Export                     | Módulo           | Desde                  |
+| -------------------------- | ---------------- | ---------------------- |
+| `ButtonVariant`            | `design-system`  | E1-T2 — raíz y subpath |
+| `Role`                     | `auth-rbac`      | E1-T3 — raíz y subpath |
+| `SessionUser`              | `auth-rbac`      | E1-T3 — raíz y subpath |
+| `Sede`                     | `multi-location` | E1-T4 — raíz y subpath |
+| `CreateSedeInput`          | `multi-location` | E1-T4 — raíz y subpath |
+| `UpdateSedeInput`          | `multi-location` | E1-T4 — raíz y subpath |
+| `SedeChildBlocker`         | `multi-location` | E1-T4 — raíz y subpath |
+| `Cita`                     | `scheduling`     | E1-T5 — raíz y subpath |
+| `CitaStatus`               | `scheduling`     | E1-T5 — raíz y subpath |
+| `CitaSource`               | `scheduling`     | E1-T5 — raíz y subpath |
+| `CreateCitaInput`          | `scheduling`     | E1-T5 — raíz y subpath |
+| `UpdateCitaInput`          | `scheduling`     | E1-T5 — raíz y subpath |
+| `CalendlyEmbedProps`       | `scheduling`     | E1-T5 — raíz y subpath |
+| `NextAppointmentCardProps` | `client-portal`  | E1-T6 — raíz y subpath |
+| `NotificationListProps`    | `client-portal`  | E1-T6 — raíz y subpath |
+| `PortalNotification`       | `client-portal`  | E1-T6 — raíz y subpath |
